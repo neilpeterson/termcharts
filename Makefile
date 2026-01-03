@@ -63,6 +63,7 @@ release:
 # Clean build artifacts
 clean:
 	@echo "Cleaning build artifacts..."
+	@rm -f $(BINARY_NAME)
 	@rm -rf $(BUILD_DIR)
 	@rm -f coverage.out coverage.html
 	@echo "Clean complete"

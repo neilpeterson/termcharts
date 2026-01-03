@@ -5,7 +5,7 @@ package termcharts
 import (
 	"strings"
 
-	"github.com/neilpeterson/termcharts/internal/util"
+	"github.com/neilpeterson/termcharts/internal"
 )
 
 // Sparkline represents a compact, inline chart showing data trends.
@@ -47,7 +47,7 @@ func (s *Sparkline) Render() string {
 	}
 
 	// Check for invalid values
-	if !util.AllValid(s.opts.Data) {
+	if !internal.AllValid(s.opts.Data) {
 		return ""
 	}
 
@@ -57,13 +57,13 @@ func (s *Sparkline) Render() string {
 		chars = sparkCharsASCII
 	} else if s.opts.Style == StyleAuto {
 		// Auto-detect Unicode support
-		if !util.SupportsUnicode() {
+		if !internal.SupportsUnicode() {
 			chars = sparkCharsASCII
 		}
 	}
 
 	// Normalize data to 0-1 range
-	normalized, _, _ := util.Normalize(s.opts.Data)
+	normalized, _, _ := internal.Normalize(s.opts.Data)
 
 	var result strings.Builder
 
@@ -172,7 +172,7 @@ func SparkASCII(data []float64) string {
 //
 //	fmt.Println(termcharts.SparkColor([]float64{1, 5, 2, 8, 3, 7, 4, 6}))
 func SparkColor(data []float64) string {
-	colorEnabled := util.SupportsColor()
+	colorEnabled := internal.SupportsColor()
 	spark := NewSparkline(
 		WithData(data),
 		WithColor(colorEnabled),

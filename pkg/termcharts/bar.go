@@ -7,7 +7,7 @@ import (
 	"math"
 	"strings"
 
-	"github.com/neilpeterson/termcharts/internal/util"
+	"github.com/neilpeterson/termcharts/internal"
 )
 
 // BarChart represents a bar chart visualization.
@@ -83,7 +83,7 @@ func (b *BarChart) renderHorizontal() string {
 	labels := b.opts.Labels
 
 	// Check for invalid values
-	if !util.AllValid(data) {
+	if !internal.AllValid(data) {
 		return ""
 	}
 
@@ -208,7 +208,7 @@ func (b *BarChart) renderVertical() string {
 	labels := b.opts.Labels
 
 	// Check for invalid values
-	if !util.AllValid(data) {
+	if !internal.AllValid(data) {
 		return ""
 	}
 
@@ -334,7 +334,7 @@ func (b *BarChart) shouldUseUnicode() bool {
 		return true
 	}
 	// StyleAuto - detect Unicode support
-	return util.SupportsUnicode()
+	return internal.SupportsUnicode()
 }
 
 // isColorEnabled determines whether colors should be used.
@@ -342,7 +342,7 @@ func (b *BarChart) isColorEnabled() bool {
 	if b.opts.ColorEnabled != nil {
 		return *b.opts.ColorEnabled
 	}
-	return util.SupportsColor()
+	return internal.SupportsColor()
 }
 
 // findMax finds the maximum value in a slice of floats.
