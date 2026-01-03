@@ -1,5 +1,15 @@
 # termcharts
 
+```
+     ▁▂▃▄▅▆▇█ termcharts █▇▆▅▄▃▂▁
+            ╔════════════╗
+            ║ ▀█▀   ▀█▀ ║
+            ║     ▼      ║
+            ║  ▀▀▀▀▀▀▀  ║
+            ╚════════════╝
+              █▓▒░░▒▓█
+```
+
 Beautiful ASCII/Unicode terminal charting library and CLI tool for Go.
 
 ## Overview
