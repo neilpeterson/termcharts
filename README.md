@@ -58,15 +58,21 @@ func main() {
     chart := termcharts.NewBarChart(
         termcharts.WithData([]float64{10, 25, 15, 30}),
         termcharts.WithLabels([]string{"Q1", "Q2", "Q3", "Q4"}),
+        termcharts.WithTitle("Quarterly Sales"),
         termcharts.WithWidth(60),
         termcharts.WithColor(true),
     )
     fmt.Println(chart.Render())
-
-    // Sparkline
-    fmt.Println(termcharts.Spark([]float64{1, 5, 2, 8, 3, 7, 4, 6}))
-    // Output: ▁▅▂█▃▇▄▆
 }
+```
+
+Output:
+```
+Quarterly Sales
+Q1  ██████████████████████
+Q2  ███████████████████████████████████████████████████
+Q3  █████████████████████████████████
+Q4  █████████████████████████████████████████████████████████████████
 ```
 
 ### CLI Usage
@@ -75,18 +81,14 @@ func main() {
 # From arguments
 termcharts bar 10 25 15 30 --labels "Q1,Q2,Q3,Q4"
 
-# From file
+# With title and values displayed
+termcharts bar 120 98 145 --labels "North,South,East" --title "Regional Sales" --show-values
+
+# Vertical bar chart
+termcharts bar 10 25 15 30 --vertical --labels "Q1,Q2,Q3,Q4"
+
+# From file (JSON or CSV)
 termcharts bar data.json
-
-# From stdin (pipe-friendly)
-cat data.csv | termcharts line --x date --y value
-
-# Sparkline
-echo "1 5 2 8 3 7" | termcharts spark
-# Output: ▁▅▂█▃▇▄▆
-
-# Real-world usage: CPU monitoring
-ps aux | awk '{sum+=$3} END {print sum}' | termcharts spark --color
 ```
 
 ## Chart Types
