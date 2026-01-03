@@ -37,10 +37,12 @@ jobs:
 
     - name: Run tests (Unix with race detector)
       if: runner.os != 'Windows'
+      shell: bash
       run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
 
     - name: Run tests (Windows without race detector)
       if: runner.os == 'Windows'
+      shell: bash
       run: go test -v -coverprofile=coverage.txt -covermode=atomic ./...
 
     - name: Upload coverage to Codecov
