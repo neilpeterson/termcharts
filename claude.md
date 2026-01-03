@@ -18,8 +18,9 @@ ASCII/Unicode terminal charting library and CLI tool, written in Go.
 1. Add feature to status.md before starting
 2. Break into subtasks if complex (>1 hour of work)
 3. Update status as each subtask completes
-4. **After completing a feature**: Update `README.md` with usage examples and documentation
-5. **When completing a chart type**: Create feature-specific documentation in `docs/` folder
+4. Create a new branch for the feature
+5. **After completing a feature**: Update `README.md` with usage examples and documentation
+6. **When completing a chart type**: Create feature-specific documentation in `docs/` folder
 
 **Documentation Maintenance:**
 - `README.md` is the main entry point - keep it current with:
