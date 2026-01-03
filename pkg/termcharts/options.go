@@ -38,8 +38,8 @@ type Option func(*Options)
 func NewOptions(opts ...Option) *Options {
 	// Default options
 	o := &Options{
-		Width:      80,  // Standard terminal width
-		Height:     24,  // Standard terminal height
+		Width:      80, // Standard terminal width
+		Height:     24, // Standard terminal height
 		Style:      StyleAuto,
 		Direction:  Horizontal,
 		ShowValues: false,
