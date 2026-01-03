@@ -27,6 +27,8 @@ const (
 	BarModeStacked
 )
 
+const unknownString = "unknown"
+
 // String returns the string representation of the BarMode.
 func (b BarMode) String() string {
 	switch b {
@@ -35,13 +37,9 @@ func (b BarMode) String() string {
 	case BarModeStacked:
 		return "stacked"
 	default:
-		return "unknown"
+		return unknownString
 	}
 }
-
-// Unicode block characters for bar rendering (8 levels).
-var barCharsHorizontal = []rune{'▏', '▎', '▍', '▌', '▋', '▊', '▉', '█'}
-var barCharsVertical = []rune{'▁', '▂', '▃', '▄', '▅', '▆', '▇', '█'}
 
 // ASCII characters for bar rendering when Unicode is not supported.
 const barCharASCII = '#'
@@ -78,6 +76,7 @@ func (b *BarChart) Render() string {
 }
 
 // renderHorizontal renders a horizontal bar chart.
+//nolint:gocyclo // Complex by nature; splitting would harm readability
 func (b *BarChart) renderHorizontal() string {
 	data := b.opts.Data
 	labels := b.opts.Labels
@@ -201,6 +200,7 @@ func (b *BarChart) renderBar(length, maxWidth int, useUnicode bool, colorEnabled
 }
 
 // renderVertical renders a vertical bar chart.
+//nolint:gocyclo // Complex by nature; splitting would harm readability
 func (b *BarChart) renderVertical() string {
 	data := b.opts.Data
 	labels := b.opts.Labels

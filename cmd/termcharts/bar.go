@@ -3,9 +3,7 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/neilpeterson/termcharts/pkg/termcharts"
@@ -177,59 +175,4 @@ func parseLabels(labelsStr string) []string {
 		}
 	}
 	return labels
-}
-
-// readBarDataWithLabels reads data and labels from a file.
-// File format: value,label (one per line)
-// Or just values (one per line)
-func readBarDataWithLabels(filename string) ([]float64, []string, error) {
-	file, err := os.Open(filename) // #nosec G304 - filename is provided by user via CLI
-	if err != nil {
-		return nil, nil, err
-	}
-	defer func() {
-		if closeErr := file.Close(); closeErr != nil {
-			fmt.Fprintf(os.Stderr, "Warning: failed to close file: %v\n", closeErr)
-		}
-	}()
-
-	var data []float64
-	var labels []string
-	scanner := bufio.NewScanner(file)
-
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if line == "" || strings.HasPrefix(line, "#") {
-			continue // Skip empty lines and comments
-		}
-
-		// Check if line contains comma (value,label format)
-		if strings.Contains(line, ",") {
-			parts := strings.SplitN(line, ",", 2)
-			if len(parts) == 2 {
-				nums, err := parseNumbers([]string{parts[0]})
-				if err != nil {
-					return nil, nil, fmt.Errorf("invalid data in file %s: %s", filename, line)
-				}
-				if len(nums) > 0 {
-					data = append(data, nums[0])
-					labels = append(labels, strings.TrimSpace(parts[1]))
-				}
-				continue
-			}
-		}
-
-		// Otherwise just parse as numbers
-		nums, err := parseNumberLine(line)
-		if err != nil {
-			return nil, nil, fmt.Errorf("invalid data in file %s: %s", filename, line)
-		}
-		data = append(data, nums...)
-	}
-
-	if err := scanner.Err(); err != nil {
-		return nil, nil, err
-	}
-
-	return data, labels, nil
 }
