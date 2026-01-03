@@ -123,11 +123,45 @@ chart := termcharts.NewBarChart(
 fmt.Println(chart.Render())
 ```
 
+Output:
+```
+Quarterly Sales
+Q1  ██████████████████████
+Q2  ███████████████████████████████████████████████████
+Q3  █████████████████████████████████
+Q4  █████████████████████████████████████████████████████████████████
+```
+
+**Vertical bars:**
 ```bash
-# CLI
-termcharts bar 10 25 15 30 --labels "Q1,Q2,Q3,Q4" --title "Sales"
-termcharts bar 10 25 15 30 --vertical  # Vertical orientation
-echo "10 20 30" | termcharts bar --show-values
+termcharts bar 10 25 15 30 --vertical --labels "Q1,Q2,Q3,Q4"
+```
+
+Output:
+```
+            ███
+            ███
+            ███
+    ███     ███
+    ███     ███
+    ███     ███
+    ███ ███ ███
+    ███ ███ ███
+███ ███ ███ ███
+███ ███ ███ ███
+Q1  Q2  Q3  Q4
+```
+
+**With values:**
+```bash
+termcharts bar 120 98 145 --labels "North,South,East" --show-values
+```
+
+Output:
+```
+North  ████████████████████████████████████████████████████████ 120.0
+South  ██████████████████████████████████████████████ 98.0
+East   ███████████████████████████████████████████████████████████████████ 145.0
 ```
 
 **[→ Full Bar Chart Documentation](docs/bar-chart.md)**
