@@ -1,5 +1,3 @@
-// Last modified: 2026-01-03
-
 package termcharts
 
 import (

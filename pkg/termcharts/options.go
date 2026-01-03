@@ -1,5 +1,3 @@
-// Last modified: 2026-01-02
-
 package termcharts
 
 // Options holds configuration for chart rendering.
