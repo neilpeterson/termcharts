@@ -329,8 +329,8 @@ func TestBarChart_Render_ZeroValues(t *testing.T) {
 		t.Error("Render returned empty string for data with zeros")
 	}
 
-	// Should have one line per data point
-	lines := strings.Split(strings.TrimSpace(result), "\n")
+	// Should have one line per data point (trim trailing newline only)
+	lines := strings.Split(strings.TrimSuffix(result, "\n"), "\n")
 	if len(lines) != len(data) {
 		t.Errorf("Expected %d lines, got %d", len(data), len(lines))
 	}
