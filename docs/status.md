@@ -4,7 +4,7 @@
 
 ## Current Focus
 
-**Session Goal:** Complete comprehensive unit tests for core types and utilities, and set up CI/CD pipeline.
+**Session Goal:** Complete v0.1.0 milestone - comprehensive testing, CI/CD, and documentation.
 
 ## Milestone: v0.1.0 - Core Library + Sparklines
 
@@ -17,12 +17,15 @@
 - [x] Unit tests for core types (chart.go, options.go, style.go)
 - [x] Unit tests for util packages (terminal.go, scale.go)
 - [x] GitHub Actions CI/CD workflow (test, build, lint)
+- [x] API reference documentation
+- [x] Updated README with testing information
+- [x] v0.1.0 milestone complete and verified
 
 ### In Progress
 
 ### Up Next
-- [ ] Documentation for core library (usage examples, API reference)
-- [ ] Prepare for v0.1.0 release
+- [ ] Create v0.1.0 release tag and GitHub release
+- [ ] Publish to pkg.go.dev
 
 ## Milestone: v0.2.0 - Bar Charts
 
@@ -74,6 +77,7 @@ None
 <!-- Reverse chronological log of completed work -->
 | Date | Change |
 |------|--------|
+| 2026-01-03 | **v0.1.0 Milestone Complete**: Completed comprehensive API reference documentation (docs/api-reference.md) covering all options, themes, render styles, and error handling. Updated README.md with testing information, CI/CD details, and updated roadmap. Verified all v0.1.0 features complete: sparkline implementation with 95% test coverage, full CLI support, comprehensive testing infrastructure, multi-platform CI/CD, and complete documentation. Ready for v0.1.0 release. |
 | 2026-01-03 | **Testing and CI/CD Complete**: Created comprehensive unit tests for all core types (chart.go, options.go, style.go) and utility packages (terminal.go, scale.go). Achieved 95.1% test coverage for pkg/termcharts and 88.5% for internal/util. Implemented GitHub Actions CI/CD workflow with matrix testing across multiple OS (Ubuntu, macOS, Windows) and Go versions (1.21-1.23). Workflow includes test, lint, build, and cross-compilation jobs. Added golangci-lint configuration. Fixed linting issue in examples. All tests passing. |
 | 2026-01-02 | **Documentation Complete**: Updated CLAUDE.md with README.md maintenance workflow. Created comprehensive sparkline documentation in `docs/sparkline.md` covering code structure, library API, CLI usage, and examples. Updated main README.md with sparkline information, updated roadmap to reflect v0.1.0 completion, and added documentation section linking to detailed guides. |
 | 2026-01-02 | **Sparkline CLI Complete**: Implemented `termcharts spark` CLI command with cobra. Supports reading from command-line arguments, files, and stdin. Includes flags for width limiting (--width), ASCII mode (--ascii), and color control (--color/--no-color). Tested with multiple input methods and all features working. |
