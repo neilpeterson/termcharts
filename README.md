@@ -120,11 +120,14 @@ echo "1 5 2 8" | termcharts spark
 ## Roadmap
 
 ### v0.1.0 - Core Library + Sparklines ✓
-- [x] Project scaffolding
+- [x] Project scaffolding and build system
 - [x] Core types and interfaces
-- [x] Terminal utilities
-- [x] Sparkline implementation with comprehensive tests
+- [x] Terminal utilities (size, color, Unicode detection)
+- [x] Sparkline implementation with comprehensive tests (95% coverage)
 - [x] Sparkline CLI command (`termcharts spark`)
+- [x] Unit tests for all core components (95% coverage)
+- [x] GitHub Actions CI/CD (multi-platform, multi-version testing)
+- [x] Complete API documentation
 
 ### v0.2.0 - Bar Charts
 - [ ] Horizontal bar charts
@@ -142,9 +145,10 @@ See [docs/status.md](docs/status.md) for detailed status and milestones.
 
 ## Documentation
 
+- **[API Reference](docs/api-reference.md)** - Complete API documentation with all options and examples
 - **[Sparkline Guide](docs/sparkline.md)** - Complete sparkline documentation with examples, API reference, and CLI usage
 - **[Project Status](docs/status.md)** - Current development status and roadmap
-- **[API Documentation](https://pkg.go.dev/github.com/neilpeterson/termcharts)** - GoDoc reference (coming soon)
+- **[GoDoc](https://pkg.go.dev/github.com/neilpeterson/termcharts)** - Generated API documentation (coming soon)
 
 ## Development
 
@@ -181,8 +185,27 @@ make clean
 
 ## Requirements
 
-- Go 1.19 or higher
+- Go 1.21 or higher
 - Terminal with Unicode support (recommended, ASCII fallback available)
+
+## Testing
+
+termcharts has comprehensive test coverage (95%+):
+
+```bash
+# Run all tests
+go test ./...
+
+# Run with coverage
+go test -cover ./...
+
+# Run with race detector
+go test -race ./...
+```
+
+The project uses GitHub Actions for CI/CD with automated testing across:
+- Multiple platforms: Linux, macOS, Windows
+- Multiple Go versions: 1.21, 1.22, 1.23
 
 ## License
 
