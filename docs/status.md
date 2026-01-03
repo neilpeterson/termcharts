@@ -1,10 +1,10 @@
 # Project Status
 
-> Last updated: 2026-01-02
+> Last updated: 2026-01-03
 
 ## Current Focus
 
-**Session Goal:** Complete project initialization and scaffolding for termcharts library and CLI.
+**Session Goal:** Complete comprehensive unit tests for core types and utilities, and set up CI/CD pipeline.
 
 ## Milestone: v0.1.0 - Core Library + Sparklines
 
@@ -14,13 +14,15 @@
 - [x] Terminal utilities (width detection, color support detection)
 - [x] Sparkline implementation with full test coverage
 - [x] Sparkline CLI command with full feature support
+- [x] Unit tests for core types (chart.go, options.go, style.go)
+- [x] Unit tests for util packages (terminal.go, scale.go)
+- [x] GitHub Actions CI/CD workflow (test, build, lint)
 
 ### In Progress
 
 ### Up Next
-- [ ] Unit tests for core types (chart.go, options.go, style.go)
-- [ ] Unit tests for util packages (terminal.go, scale.go)
-- [ ] GitHub Actions CI/CD workflow (test, build, lint)
+- [ ] Documentation for core library (usage examples, API reference)
+- [ ] Prepare for v0.1.0 release
 
 ## Milestone: v0.2.0 - Bar Charts
 
@@ -72,6 +74,7 @@ None
 <!-- Reverse chronological log of completed work -->
 | Date | Change |
 |------|--------|
+| 2026-01-03 | **Testing and CI/CD Complete**: Created comprehensive unit tests for all core types (chart.go, options.go, style.go) and utility packages (terminal.go, scale.go). Achieved 95.1% test coverage for pkg/termcharts and 88.5% for internal/util. Implemented GitHub Actions CI/CD workflow with matrix testing across multiple OS (Ubuntu, macOS, Windows) and Go versions (1.21-1.23). Workflow includes test, lint, build, and cross-compilation jobs. Added golangci-lint configuration. Fixed linting issue in examples. All tests passing. |
 | 2026-01-02 | **Documentation Complete**: Updated CLAUDE.md with README.md maintenance workflow. Created comprehensive sparkline documentation in `docs/sparkline.md` covering code structure, library API, CLI usage, and examples. Updated main README.md with sparkline information, updated roadmap to reflect v0.1.0 completion, and added documentation section linking to detailed guides. |
 | 2026-01-02 | **Sparkline CLI Complete**: Implemented `termcharts spark` CLI command with cobra. Supports reading from command-line arguments, files, and stdin. Includes flags for width limiting (--width), ASCII mode (--ascii), and color control (--color/--no-color). Tested with multiple input methods and all features working. |
 | 2026-01-02 | **Sparkline Complete**: Implemented Sparkline chart type with Unicode and ASCII rendering modes, color support, width limiting, and 3 convenience functions (Spark, SparkASCII, SparkColor). Includes comprehensive unit tests (14 test cases) covering edge cases, character mapping, and invalid data handling. All tests passing. |

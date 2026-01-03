@@ -14,9 +14,9 @@ import (
 )
 
 var (
-	sparkWidth  int
-	sparkColor  bool
-	sparkASCII  bool
+	sparkWidth   int
+	sparkColor   bool
+	sparkASCII   bool
 	sparkNoColor bool
 )
 
@@ -166,11 +166,16 @@ func readDataFromStdin() ([]float64, error) {
 
 // readDataFromFile reads numeric data from a file.
 func readDataFromFile(filename string) ([]float64, error) {
-	file, err := os.Open(filename)
+	file, err := os.Open(filename) // #nosec G304 - filename is provided by user via CLI
 	if err != nil {
 		return nil, err
 	}
-	defer file.Close()
+	defer func() {
+		if closeErr := file.Close(); closeErr != nil {
+			// Log error but don't override return value since we're already returning
+			fmt.Fprintf(os.Stderr, "Warning: failed to close file: %v\n", closeErr)
+		}
+	}()
 
 	var data []float64
 	scanner := bufio.NewScanner(file)

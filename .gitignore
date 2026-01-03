@@ -37,5 +37,5 @@ Thumbs.db
 tmp/
 temp/
 
-# Binary
-termcharts
+# Binary (only in root directory)
+/termcharts

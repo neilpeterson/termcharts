@@ -141,8 +141,7 @@ func TestSparkline_Render_UnicodeMode(t *testing.T) {
 	result := spark.Render()
 
 	// Verify it uses the Unicode character set
-	runes := []rune(result)
-	for _, r := range runes {
+	for _, r := range result {
 		found := false
 		for _, unicodeChar := range sparkChars {
 			if r == unicodeChar {
