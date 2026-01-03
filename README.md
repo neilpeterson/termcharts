@@ -25,11 +25,42 @@ go get github.com/neilpeterson/termcharts/pkg/termcharts
 
 ### As a CLI Tool
 
+#### Download Pre-built Binaries
+
+Download the latest release for your platform from the [releases page](https://github.com/neilpeterson/termcharts/releases).
+
+**macOS:**
+```bash
+# Intel Macs
+curl -L https://github.com/neilpeterson/termcharts/releases/latest/download/termcharts_darwin_amd64.tar.gz | tar xz
+sudo mv termcharts /usr/local/bin/
+
+# Apple Silicon (M1/M2/M3)
+curl -L https://github.com/neilpeterson/termcharts/releases/latest/download/termcharts_darwin_arm64.tar.gz | tar xz
+sudo mv termcharts /usr/local/bin/
+```
+
+**Linux:**
+```bash
+# AMD64
+curl -L https://github.com/neilpeterson/termcharts/releases/latest/download/termcharts_linux_amd64.tar.gz | tar xz
+sudo mv termcharts /usr/local/bin/
+
+# ARM64
+curl -L https://github.com/neilpeterson/termcharts/releases/latest/download/termcharts_linux_arm64.tar.gz | tar xz
+sudo mv termcharts /usr/local/bin/
+```
+
+**Windows:**
+Download the `.zip` file from the [releases page](https://github.com/neilpeterson/termcharts/releases) and extract manually.
+
+#### Install with Go
+
 ```bash
 go install github.com/neilpeterson/termcharts/cmd/termcharts@latest
 ```
 
-Or build from source:
+#### Build from Source
 
 ```bash
 git clone https://github.com/neilpeterson/termcharts.git
