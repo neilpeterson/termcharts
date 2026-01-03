@@ -1,6 +1,6 @@
 // Last modified: 2026-01-02
 
-package util
+package internal
 
 import "math"
 

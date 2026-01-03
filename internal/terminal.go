@@ -1,7 +1,7 @@
 // Last modified: 2026-01-02
 
-// Package util provides internal utilities for terminal interaction and data manipulation.
-package util
+// Package internal provides internal utilities for terminal interaction and data manipulation.
+package internal
 
 import (
 	"os"
