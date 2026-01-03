@@ -44,10 +44,8 @@ cmd/termcharts/
 └── spark.go             # Sparkline subcommand
 
 examples/
-└── sparkline_demo.go    # Demo application
-
-testdata/
-└── sample.txt           # Sample data file
+└── sparkline/
+    └── main.go          # Demo application
 ```
 
 ### Core Components

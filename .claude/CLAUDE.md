@@ -61,12 +61,9 @@ termcharts/
 │       ├── chart.go          # Base Chart interface and common types
 │       ├── options.go        # Functional options pattern
 │       ├── bar.go            # Horizontal/vertical bar charts
-│       ├── line.go           # Line charts (ASCII + Braille)
 │       ├── sparkline.go      # Inline sparklines
-│       ├── scatter.go        # Scatter plots
-│       ├── heatmap.go        # Heatmaps
-│       ├── gauge.go          # Progress bars / gauges
 │       └── style.go          # Colors, themes, rendering modes
+│       # Future: line.go, scatter.go, heatmap.go, gauge.go
 ├── internal/                 # Internal utilities (not part of public API)
 │   ├── terminal.go           # Terminal size detection
 │   └── scale.go              # Data scaling/normalization
@@ -75,11 +72,12 @@ termcharts/
 │       ├── main.go           # Entry point
 │       ├── root.go           # Root command
 │       ├── bar.go            # `termcharts bar` subcommand
-│       ├── line.go           # `termcharts line` subcommand
-│       ├── spark.go          # `termcharts spark` subcommand
-│       └── sources.go        # Data source handling (JSON, CSV, stdin, API)
+│       └── spark.go          # `termcharts spark` subcommand
+│       # Future: line.go, sources.go
 ├── examples/
-├── testdata/                 # Sample data files for tests
+│   ├── bar-chart/            # Bar chart demo
+│   └── sparkline/            # Sparkline demo
+├── docs/                     # Documentation
 ├── go.mod
 ├── go.sum
 ├── Makefile
@@ -203,8 +201,10 @@ test       # Run tests
 cover      # Run tests with coverage report
 lint       # Run golangci-lint
 install    # Install to $GOPATH/bin
+deps       # Download and tidy dependencies
 release    # Cross-compile for all platforms
 clean      # Remove build artifacts
+help       # Display available targets
 ```
 
 ## References
