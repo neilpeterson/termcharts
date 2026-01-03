@@ -15,10 +15,13 @@ ASCII/Unicode terminal charting library and CLI tool, written in Go.
 3. Summarize what was done and suggest next steps
 
 **When creating new features:**
-1. Add feature to status.md before starting
-2. Break into subtasks if complex (>1 hour of work)
-3. Update status as each subtask completes
-4. Create a new branch for the feature
+1. **ALWAYS create a new feature branch FIRST** - Never make changes on main or existing branches
+   - Use naming pattern: `feature/feature-name` (e.g., `feature/bar-charts`)
+   - Command: `git checkout -b feature/feature-name`
+   - This is a BLOCKING requirement - do not proceed without creating a branch
+2. Add feature to status.md before starting implementation
+3. Break into subtasks if complex (>1 hour of work)
+4. Update status as each subtask completes
 5. **After completing a feature**: Update `README.md` with usage examples and documentation
 6. **When completing a chart type**: Create feature-specific documentation in `docs/` folder
 
