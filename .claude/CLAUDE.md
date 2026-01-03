@@ -67,14 +67,9 @@ termcharts/
 │       ├── heatmap.go        # Heatmaps
 │       ├── gauge.go          # Progress bars / gauges
 │       └── style.go          # Colors, themes, rendering modes
-├── internal/
-│   ├── render/               # Rendering backends
-│   │   ├── ascii.go          # Pure ASCII (max compatibility)
-│   │   ├── unicode.go        # Unicode blocks/braille
-│   │   └── canvas.go         # 2D character canvas abstraction
-│   └── util/
-│       ├── terminal.go       # Terminal size detection
-│       └── scale.go          # Data scaling/normalization
+├── internal/                 # Internal utilities (not part of public API)
+│   ├── terminal.go           # Terminal size detection
+│   └── scale.go              # Data scaling/normalization
 ├── cmd/
 │   └── termcharts/
 │       ├── main.go           # Entry point
