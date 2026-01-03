@@ -10,7 +10,7 @@ import (
 
 func main() {
 	fmt.Println("Sparkline Demo")
-	fmt.Println("==============\n")
+	fmt.Println("==============")
 
 	// Simple sparkline
 	data1 := []float64{1, 5, 2, 8, 3, 7, 4, 6}
