@@ -17,7 +17,7 @@ Bar charts are one of the core visualization types in termcharts. They display d
 - **Library**: `pkg/termcharts/bar.go`
 - **Tests**: `pkg/termcharts/bar_test.go`
 - **CLI**: `cmd/termcharts/bar.go`
-- **Examples**: `examples/bar_chart.go`
+- **Examples**: `examples/bar-chart/main.go`
 
 ### Types
 
