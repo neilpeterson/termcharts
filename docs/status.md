@@ -4,9 +4,9 @@
 
 ## Current Focus
 
-**Session Goal:** Complete v0.1.0 milestone - comprehensive testing, CI/CD, and documentation.
+**Session Goal:** v0.2.0 milestone complete! Bar charts fully implemented with comprehensive tests and documentation.
 
-## Milestone: v0.1.0 - Core Library + Sparklines
+## Milestone: v0.1.0 - Core Library + Sparklines ✓
 
 ### Completed
 - [x] Project scaffolding (go.mod, directory structure, Makefile)
@@ -27,16 +27,24 @@
 - [ ] Create v0.1.0 release tag and GitHub release
 - [ ] Publish to pkg.go.dev
 
-## Milestone: v0.2.0 - Bar Charts
+## Milestone: v0.2.0 - Bar Charts ✓
 
-### Backlog
-- [ ] Horizontal bar chart
-- [ ] Vertical bar chart
-- [ ] Grouped/stacked bar variants
-- [ ] Labels and axis rendering
-- [ ] CLI `bar` subcommand
-- [ ] Bar chart tests + golden files
-- [ ] Integration tests for CLI
+### Completed
+- [x] Horizontal bar chart with Unicode and ASCII modes
+- [x] Vertical bar chart with configurable height
+- [x] Labels and axis rendering
+- [x] Value display option
+- [x] Title support
+- [x] CLI `bar` subcommand with full feature support
+- [x] Comprehensive unit tests (27 test cases, all passing)
+- [x] Bar chart example program
+- [x] Complete documentation (docs/bar-chart.md)
+- [x] Updated README with bar chart examples
+
+### Deferred to Future Releases
+- [ ] Grouped bar charts (v0.4.0)
+- [ ] Stacked bar charts (v0.4.0)
+- [ ] Integration tests for CLI (v0.4.0)
 
 ## Milestone: v0.3.0 - Line Charts
 
@@ -77,6 +85,7 @@ None
 <!-- Reverse chronological log of completed work -->
 | Date | Change |
 |------|--------|
+| 2026-01-03 | **v0.2.0 Milestone Complete**: Implemented full bar chart functionality including horizontal and vertical orientations, labels, titles, value display, and customizable styling. Created CLI `bar` subcommand with support for data from arguments, files, and stdin. Added comprehensive unit tests (27 test cases, all passing). Created example program and complete documentation (docs/bar-chart.md). Updated README with bar chart examples and roadmap. Bar charts support Unicode/ASCII modes, colors, and flexible sizing. Deferred grouped/stacked variants to v0.4.0. |
 | 2026-01-03 | **v0.1.0 Milestone Complete**: Completed comprehensive API reference documentation (docs/api-reference.md) covering all options, themes, render styles, and error handling. Updated README.md with testing information, CI/CD details, and updated roadmap. Verified all v0.1.0 features complete: sparkline implementation with 95% test coverage, full CLI support, comprehensive testing infrastructure, multi-platform CI/CD, and complete documentation. Ready for v0.1.0 release. |
 | 2026-01-03 | **Testing and CI/CD Complete**: Created comprehensive unit tests for all core types (chart.go, options.go, style.go) and utility packages (terminal.go, scale.go). Achieved 95.1% test coverage for pkg/termcharts and 88.5% for internal/util. Implemented GitHub Actions CI/CD workflow with matrix testing across multiple OS (Ubuntu, macOS, Windows) and Go versions (1.21-1.23). Workflow includes test, lint, build, and cross-compilation jobs. Added golangci-lint configuration. Fixed linting issue in examples. All tests passing. |
 | 2026-01-02 | **Documentation Complete**: Updated CLAUDE.md with README.md maintenance workflow. Created comprehensive sparkline documentation in `docs/sparkline.md` covering code structure, library API, CLI usage, and examples. Updated main README.md with sparkline information, updated roadmap to reflect v0.1.0 completion, and added documentation section linking to detailed guides. |
