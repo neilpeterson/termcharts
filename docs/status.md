@@ -4,7 +4,7 @@
 
 ## Current Focus
 
-**Session Goal:** v0.1.0 and v0.2.0 released! Ready to begin v0.3.0 (Line Charts).
+**Session Goal:** Project scrub complete. Ready to begin v0.3.0 (Line Charts).
 
 ## Milestone: v0.1.0 - Core Library + Sparklines ✓
 
@@ -82,6 +82,7 @@ None
 <!-- Reverse chronological log of completed work -->
 | Date | Change |
 |------|--------|
+| 2026-01-03 | **Project Scrub Complete**: Ran comprehensive project cleanup. Cleaned dependencies (go mod tidy fixed direct/indirect classification for cobra). Fixed outdated documentation: updated sparkline.md file structure (removed nonexistent testdata reference, fixed example path), updated CLAUDE.md architecture to reflect current file structure (removed files not yet implemented, added docs/ directory, added Makefile deps target). All tests passing (87 tests), examples working, no unused code found, no TODO/FIXME markers. Project ready for v0.3.0 development. |
 | 2026-01-03 | **Releases Published**: Created v0.1.0 and v0.2.0 GitHub releases with comprehensive release notes. Tagged commits v0.1.0 (58424ac) and v0.2.0 (f0b8879). Published to GitHub releases with installation instructions, quick start examples, and documentation links. Package will be automatically indexed on pkg.go.dev when first requested via `go get`. Both releases are now publicly available for Go developers. |
 | 2026-01-03 | **README Quick Start Updated**: Changed Quick Start section to focus exclusively on bar charts instead of mixing multiple chart types. Added visual output example, enhanced CLI usage examples with vertical bars and value display options. Improves clarity for new users getting started with the library. |
 | 2026-01-03 | **v0.2.0 Milestone Complete**: Implemented full bar chart functionality including horizontal and vertical orientations, labels, titles, value display, and customizable styling. Created CLI `bar` subcommand with support for data from arguments, files, and stdin. Added comprehensive unit tests (27 test cases, all passing). Created example program and complete documentation (docs/bar-chart.md). Updated README with bar chart examples and roadmap. Bar charts support Unicode/ASCII modes, colors, and flexible sizing. Deferred grouped/stacked variants to v0.4.0. |
