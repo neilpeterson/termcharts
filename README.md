@@ -109,9 +109,65 @@ echo "1 5 2 8" | termcharts spark
 
 **[→ Full Sparkline Documentation](docs/sparkline.md)**
 
+### Bar Charts ✓
+
+Horizontal and vertical bar charts for comparing values. Supports labels, titles, and value display.
+
+```go
+// Library
+chart := termcharts.NewBarChart(
+    termcharts.WithData([]float64{10, 25, 15, 30}),
+    termcharts.WithLabels([]string{"Q1", "Q2", "Q3", "Q4"}),
+    termcharts.WithTitle("Quarterly Sales"),
+)
+fmt.Println(chart.Render())
+```
+
+Output:
+```
+Quarterly Sales
+Q1  ██████████████████████
+Q2  ███████████████████████████████████████████████████
+Q3  █████████████████████████████████
+Q4  █████████████████████████████████████████████████████████████████
+```
+
+**Vertical bars:**
+```bash
+termcharts bar 10 25 15 30 --vertical --labels "Q1,Q2,Q3,Q4"
+```
+
+Output:
+```
+            ███
+            ███
+            ███
+    ███     ███
+    ███     ███
+    ███     ███
+    ███ ███ ███
+    ███ ███ ███
+███ ███ ███ ███
+███ ███ ███ ███
+Q1  Q2  Q3  Q4
+```
+
+**With values:**
+```bash
+termcharts bar 120 98 145 --labels "North,South,East" --show-values
+```
+
+Output:
+```
+North  ████████████████████████████████████████████████████████ 120.0
+South  ██████████████████████████████████████████████ 98.0
+East   ███████████████████████████████████████████████████████████████████ 145.0
+```
+
+**[→ Full Bar Chart Documentation](docs/bar-chart.md)**
+
 ### Coming Soon
 
-- **Bar Charts** - Horizontal and vertical bar charts with labels
 - **Line Charts** - ASCII and high-resolution Braille line charts
 - **Heatmaps** - 2D data visualization with color gradients
 - **Scatter Plots** - XY coordinate plotting
@@ -129,11 +185,14 @@ echo "1 5 2 8" | termcharts spark
 - [x] GitHub Actions CI/CD (multi-platform, multi-version testing)
 - [x] Complete API documentation
 
-### v0.2.0 - Bar Charts
-- [ ] Horizontal bar charts
-- [ ] Vertical bar charts
-- [ ] Grouped/stacked variants
-- [ ] CLI `bar` subcommand
+### v0.2.0 - Bar Charts ✓
+- [x] Horizontal bar charts
+- [x] Vertical bar charts
+- [x] Labels and axis rendering
+- [x] Value display option
+- [x] CLI `bar` subcommand
+- [x] Comprehensive tests and documentation
+- [ ] Grouped/stacked variants (deferred to v0.4.0)
 
 ### v0.3.0 - Line Charts
 - [ ] ASCII line charts
@@ -147,6 +206,7 @@ See [docs/status.md](docs/status.md) for detailed status and milestones.
 
 - **[API Reference](docs/api-reference.md)** - Complete API documentation with all options and examples
 - **[Sparkline Guide](docs/sparkline.md)** - Complete sparkline documentation with examples, API reference, and CLI usage
+- **[Bar Chart Guide](docs/bar-chart.md)** - Complete bar chart documentation with examples, API reference, and CLI usage
 - **[Project Status](docs/status.md)** - Current development status and roadmap
 - **[GoDoc](https://pkg.go.dev/github.com/neilpeterson/termcharts)** - Generated API documentation (coming soon)
 
