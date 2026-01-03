@@ -1,5 +1,3 @@
-// Last modified: 2026-01-02
-
 // Package termcharts provides ASCII and Unicode terminal charting capabilities.
 //
 // termcharts supports multiple chart types including bar charts, line charts,

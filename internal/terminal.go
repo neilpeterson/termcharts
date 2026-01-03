@@ -1,5 +1,3 @@
-// Last modified: 2026-01-02
-
 // Package internal provides internal utilities for terminal interaction and data manipulation.
 package internal
 

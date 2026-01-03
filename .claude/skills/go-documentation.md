@@ -2,22 +2,6 @@
 
 Apply these documentation standards to ALL Go code written in this project.
 
-## File Header
-
-Every Go file MUST start with a header comment containing the last modified date:
-
-```go
-// Last modified: 2026-01-02
-
-package termcharts
-```
-
-**Rules:**
-- Place at the very top of the file, before package declaration
-- Use ISO 8601 date format (YYYY-MM-DD)
-- Update the date whenever the file is modified
-- Leave a blank line between header and package comment/declaration
-
 ## Package Documentation (One File Per Package)
 
 ```go
@@ -115,15 +99,14 @@ var ErrInvalidData = errors.New("invalid or empty data")
 
 ## Key Rules
 
-1. **Every file MUST have a header with last modified date**
-2. **All exported symbols MUST have documentation comments**
-3. **Start comments with the name of the symbol being documented**
-4. **Use complete sentences**
-5. **Include usage examples for complex APIs**
-6. **Keep inline comments minimal - code should be self-explanatory**
-7. **Comments explain WHY, code explains WHAT**
-8. **First sentence is crucial - it appears in package indexes**
-9. **Follow godoc conventions** (rendered by `go doc`)
+1. **All exported symbols MUST have documentation comments**
+2. **Start comments with the name of the symbol being documented**
+3. **Use complete sentences**
+4. **Include usage examples for complex APIs**
+5. **Keep inline comments minimal - code should be self-explanatory**
+6. **Comments explain WHY, code explains WHAT**
+7. **First sentence is crucial - it appears in package indexes**
+8. **Follow godoc conventions** (rendered by `go doc`)
 
 ## Internal/Unexported Code
 
@@ -150,5 +133,3 @@ func clamp(val, min, max int) int {
 ---
 
 **Apply these standards automatically when writing or modifying Go code.**
-
-**IMPORTANT:** When modifying any Go file, always update the "Last modified" date in the file header to the current date.
