@@ -199,6 +199,41 @@ East   ████████████████████████�
 
 **[→ Full Bar Chart Documentation](docs/bar-chart.md)**
 
+### Pie Charts ✓
+
+Pie charts display proportional data with color-coded segments and percentages.
+
+```go
+// Library
+pie := termcharts.NewPieChart(
+    termcharts.WithData([]float64{30, 25, 20, 15, 10}),
+    termcharts.WithLabels([]string{"Chrome", "Firefox", "Safari", "Edge", "Other"}),
+    termcharts.WithTitle("Browser Market Share"),
+)
+fmt.Println(pie.Render())
+```
+
+Output:
+```
+Browser Market Share
+
+  ███████████████████████████████████████████████████████████████████████████
+
+  █ Chrome   ( 30.0%)
+  █ Firefox  ( 25.0%)
+  █ Safari   ( 20.0%)
+  █ Edge     ( 15.0%)
+  █ Other    ( 10.0%)
+```
+
+```bash
+# CLI
+termcharts pie 30 25 20 15 10 --labels "Chrome,Firefox,Safari,Edge,Other"
+termcharts pie 50 30 20 --title "Survey Results" --show-values
+```
+
+**[→ Full Pie Chart Documentation](docs/pie-chart.md)**
+
 ### Coming Soon
 
 - **Line Charts** - ASCII and high-resolution Braille line charts
@@ -225,9 +260,16 @@ East   ████████████████████████�
 - [x] Value display option
 - [x] CLI `bar` subcommand
 - [x] Comprehensive tests and documentation
-- [ ] Grouped/stacked variants (deferred to v0.4.0)
+- [ ] Grouped/stacked variants (deferred to v0.5.0)
 
-### v0.3.0 - Line Charts
+### v0.3.0 - Pie Charts ✓
+- [x] Pie chart with Unicode/ASCII modes
+- [x] Percentage and value display
+- [x] Legend and color coding
+- [x] CLI `pie` subcommand
+- [x] Comprehensive tests and documentation
+
+### v0.4.0 - Line Charts
 - [ ] ASCII line charts
 - [ ] Braille high-resolution charts
 - [ ] Multi-series support
@@ -240,6 +282,7 @@ See [docs/status.md](docs/status.md) for detailed status and milestones.
 - **[API Reference](docs/api-reference.md)** - Complete API documentation with all options and examples
 - **[Sparkline Guide](docs/sparkline.md)** - Complete sparkline documentation with examples, API reference, and CLI usage
 - **[Bar Chart Guide](docs/bar-chart.md)** - Complete bar chart documentation with examples, API reference, and CLI usage
+- **[Pie Chart Guide](docs/pie-chart.md)** - Complete pie chart documentation with examples, API reference, and CLI usage
 - **[Project Status](docs/status.md)** - Current development status and roadmap
 - **[GoDoc](https://pkg.go.dev/github.com/neilpeterson/termcharts)** - Generated API documentation (coming soon)
 

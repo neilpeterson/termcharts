@@ -4,7 +4,7 @@
 
 ## Current Focus
 
-**Session Goal:** Project scrub complete. Ready to begin v0.3.0 (Line Charts).
+**Session Goal:** v0.3.0 (Pie Charts) complete! Ready to begin v0.4.0 (Line Charts).
 
 ## Milestone: v0.1.0 - Core Library + Sparklines ✓
 
@@ -39,11 +39,24 @@
 - [x] v0.2.0 release tag and GitHub release created
 
 ### Deferred to Future Releases
-- [ ] Grouped bar charts (v0.4.0)
-- [ ] Stacked bar charts (v0.4.0)
-- [ ] Integration tests for CLI (v0.4.0)
+- [ ] Grouped bar charts (v0.5.0)
+- [ ] Stacked bar charts (v0.5.0)
+- [ ] Integration tests for CLI (v0.5.0)
 
-## Milestone: v0.3.0 - Line Charts
+## Milestone: v0.3.0 - Pie Charts ✓
+
+### Completed
+- [x] Pie chart implementation with Unicode/ASCII modes
+- [x] Percentage and value display options
+- [x] Legend support with aligned labels
+- [x] Color coding for slices (theme-based)
+- [x] CLI `pie` subcommand with full feature support
+- [x] Comprehensive unit tests (20 test cases, all passing)
+- [x] Pie chart example program
+- [x] Complete documentation (docs/pie-chart.md)
+- [x] Updated README with pie chart examples
+
+## Milestone: v0.4.0 - Line Charts
 
 ### Backlog
 - [ ] ASCII line chart (using box-drawing characters)
@@ -82,6 +95,7 @@ None
 <!-- Reverse chronological log of completed work -->
 | Date | Change |
 |------|--------|
+| 2026-01-03 | **v0.3.0 Milestone Complete**: Implemented pie charts with proportional bar visualization and color-coded legend. Features include Unicode/ASCII modes, percentage display, optional value display, title support, theme-based colors, and customizable width. Created CLI `pie` subcommand with support for data from arguments, files, and stdin. Added comprehensive unit tests (20 test cases, all passing). Created example program and complete documentation (docs/pie-chart.md). Updated README with pie chart examples and roadmap. |
 | 2026-01-03 | **Project Scrub Complete**: Ran comprehensive project cleanup. Cleaned dependencies (go mod tidy fixed direct/indirect classification for cobra). Fixed outdated documentation: updated sparkline.md file structure (removed nonexistent testdata reference, fixed example path), updated CLAUDE.md architecture to reflect current file structure (removed files not yet implemented, added docs/ directory, added Makefile deps target). All tests passing (87 tests), examples working, no unused code found, no TODO/FIXME markers. Project ready for v0.3.0 development. |
 | 2026-01-03 | **Releases Published**: Created v0.1.0 and v0.2.0 GitHub releases with comprehensive release notes. Tagged commits v0.1.0 (58424ac) and v0.2.0 (f0b8879). Published to GitHub releases with installation instructions, quick start examples, and documentation links. Package will be automatically indexed on pkg.go.dev when first requested via `go get`. Both releases are now publicly available for Go developers. |
 | 2026-01-03 | **README Quick Start Updated**: Changed Quick Start section to focus exclusively on bar charts instead of mixing multiple chart types. Added visual output example, enhanced CLI usage examples with vertical bars and value display options. Improves clarity for new users getting started with the library. |
