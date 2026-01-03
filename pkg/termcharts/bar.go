@@ -76,6 +76,7 @@ func (b *BarChart) Render() string {
 }
 
 // renderHorizontal renders a horizontal bar chart.
+//
 //nolint:gocyclo // Complex by nature; splitting would harm readability
 func (b *BarChart) renderHorizontal() string {
 	data := b.opts.Data
@@ -200,6 +201,7 @@ func (b *BarChart) renderBar(length, maxWidth int, useUnicode bool, colorEnabled
 }
 
 // renderVertical renders a vertical bar chart.
+//
 //nolint:gocyclo // Complex by nature; splitting would harm readability
 func (b *BarChart) renderVertical() string {
 	data := b.opts.Data
