@@ -1,0 +1,134 @@
+# GoReleaser configuration for termcharts
+# See: https://goreleaser.com
+
+version: 2
+
+project_name: termcharts
+
+before:
+  hooks:
+    # Run tests before building
+    - go test ./...
+    # Ensure dependencies are up to date
+    - go mod tidy
+
+builds:
+  - id: termcharts
+    main: ./cmd/termcharts
+    binary: termcharts
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    # Ignore these combos (Windows ARM64 is uncommon)
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      # Strip debug info and set version
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+
+archives:
+  - id: termcharts
+    format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- .Os }}_
+      {{- .Arch }}
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - LICENSE
+      - docs/**/*
+
+checksum:
+  name_template: 'checksums.txt'
+  algorithm: sha256
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+      - 'typo'
+  groups:
+    - title: Features
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 0
+    - title: 'Bug fixes'
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 1
+    - title: 'Performance improvements'
+      regexp: '^.*?perf(\([[:word:]]+\))??!?:.+$'
+      order: 2
+    - title: Others
+      order: 999
+
+release:
+  github:
+    owner: neilpeterson
+    name: termcharts
+  draft: false
+  prerelease: auto
+  mode: replace
+  header: |
+    ## Installation
+
+    ### Download Pre-built Binaries
+
+    Download the appropriate binary for your platform from the assets below.
+
+    **macOS:**
+    ```bash
+    # Intel Macs
+    curl -L https://github.com/neilpeterson/termcharts/releases/download/{{ .Tag }}/termcharts_{{ .Version }}_darwin_amd64.tar.gz | tar xz
+    sudo mv termcharts /usr/local/bin/
+
+    # Apple Silicon (M1/M2/M3)
+    curl -L https://github.com/neilpeterson/termcharts/releases/download/{{ .Tag }}/termcharts_{{ .Version }}_darwin_arm64.tar.gz | tar xz
+    sudo mv termcharts /usr/local/bin/
+    ```
+
+    **Linux:**
+    ```bash
+    # AMD64
+    curl -L https://github.com/neilpeterson/termcharts/releases/download/{{ .Tag }}/termcharts_{{ .Version }}_linux_amd64.tar.gz | tar xz
+    sudo mv termcharts /usr/local/bin/
+
+    # ARM64
+    curl -L https://github.com/neilpeterson/termcharts/releases/download/{{ .Tag }}/termcharts_{{ .Version }}_linux_arm64.tar.gz | tar xz
+    sudo mv termcharts /usr/local/bin/
+    ```
+
+    **Windows:**
+    ```powershell
+    # Download the .zip file from assets below and extract manually
+    ```
+
+    ### Or Install with Go
+
+    ```bash
+    go install github.com/neilpeterson/termcharts/cmd/termcharts@{{ .Tag }}
+    ```
+
+  footer: |
+    ---
+
+    **Full Changelog**: https://github.com/neilpeterson/termcharts/compare/{{ .PreviousTag }}...{{ .Tag }}
