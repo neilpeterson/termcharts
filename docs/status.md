@@ -4,7 +4,7 @@
 
 ## Current Focus
 
-**Session Goal:** v0.3.0 (Pie Charts) complete! Ready to begin v0.4.0 (Line Charts).
+**Session Goal:** v0.4.0 (Line Charts) complete! Ready to begin v0.5.0.
 
 ## Milestone: v0.1.0 - Core Library + Sparklines ✓
 
@@ -56,14 +56,18 @@
 - [x] Complete documentation (docs/pie-chart.md)
 - [x] Updated README with pie chart examples
 
-## Milestone: v0.4.0 - Line Charts
+## Milestone: v0.4.0 - Line Charts ✓
 
-### Backlog
-- [ ] ASCII line chart (using box-drawing characters)
-- [ ] Braille high-resolution line chart
-- [ ] Multi-series support
-- [ ] CLI `line` subcommand
-- [ ] Line chart tests + golden files
+### Completed
+- [x] ASCII line chart (using box-drawing characters)
+- [x] Unicode line chart with box-drawing characters
+- [x] Braille high-resolution line chart
+- [x] Multi-series support with automatic legend
+- [x] CLI `line` subcommand with full feature support
+- [x] Comprehensive unit tests (27 test cases, all passing)
+- [x] Line chart example program
+- [x] Complete documentation (docs/line-chart.md)
+- [x] Updated README with line chart examples
 
 ## Future / Ideas
 
@@ -95,6 +99,7 @@ None
 <!-- Reverse chronological log of completed work -->
 | Date | Change |
 |------|--------|
+| 2026-01-03 | **v0.4.0 Milestone Complete**: Implemented line charts with three rendering modes (ASCII, Unicode, Braille). Features include box-drawing characters for ASCII/Unicode modes, high-resolution Braille patterns (2x4 dots per character), multi-series support with automatic legend, configurable axes and labels, theme-based colors, and comprehensive CLI options. Created CLI `line` subcommand with support for --braille, --ascii, --axes, --title, --labels, and theme selection. Added comprehensive unit tests (27 test cases, all passing). Created example program and complete documentation (docs/line-chart.md). Updated README with line chart examples and roadmap. |
 | 2026-01-03 | **v0.3.0 Milestone Complete**: Implemented pie charts with circular ASCII art visualization. Features include different characters per slice (when colors disabled) or uniform asterisk with colors, legend positioned to the right, Unicode/ASCII modes, percentage display, optional value display, title support, and theme-based colors. Created CLI `pie` subcommand with support for data from arguments, files, and stdin. Added comprehensive unit tests (20 test cases, all passing). Created example program and complete documentation (docs/pie-chart.md). Updated README with pie chart examples and roadmap. |
 | 2026-01-03 | **Project Scrub Complete**: Ran comprehensive project cleanup. Cleaned dependencies (go mod tidy fixed direct/indirect classification for cobra). Fixed outdated documentation: updated sparkline.md file structure (removed nonexistent testdata reference, fixed example path), updated CLAUDE.md architecture to reflect current file structure (removed files not yet implemented, added docs/ directory, added Makefile deps target). All tests passing (87 tests), examples working, no unused code found, no TODO/FIXME markers. Project ready for v0.3.0 development. |
 | 2026-01-03 | **Releases Published**: Created v0.1.0 and v0.2.0 GitHub releases with comprehensive release notes. Tagged commits v0.1.0 (58424ac) and v0.2.0 (f0b8879). Published to GitHub releases with installation instructions, quick start examples, and documentation links. Package will be automatically indexed on pkg.go.dev when first requested via `go get`. Both releases are now publicly available for Go developers. |
