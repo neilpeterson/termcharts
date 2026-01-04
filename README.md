@@ -206,45 +206,19 @@ Pie charts display proportional data with color-coded segments and percentages.
 ```go
 // Library
 pie := termcharts.NewPieChart(
-    termcharts.WithData([]float64{30, 25, 20, 15, 10}),
-    termcharts.WithLabels([]string{"Chrome", "Firefox", "Safari", "Edge", "Other"}),
-    termcharts.WithTitle("Browser Market Share"),
+    termcharts.WithData([]float64{50, 30, 20}),
+    termcharts.WithLabels([]string{"Desktop", "Mobile", "Tablet"}),
+    termcharts.WithColor(true),
 )
 fmt.Println(pie.Render())
 ```
 
-Output:
-```
-Browser Market Share
-
-              █
-       ██████████████
-    ████████████████████
-  ██████████████████████████
- ████████████████████████████
- ████████████████████████████
-████████████████████████████████
- ██████████████████████████████
- ██████████████████████████████
-  ████████████████████████████
-   ██████████████████████████
-    ████████████████████████
-      ██████████████████████
-        ████████████████████
-           ██████████████
-              ████
-
-  █ Chrome   ( 30.0%)
-  █ Firefox  ( 25.0%)
-  █ Safari   ( 20.0%)
-  █ Edge     ( 15.0%)
-  █ Other    ( 10.0%)
-```
+![Pie Chart Example](docs/images/pie-chart-color.png)
 
 ```bash
 # CLI
-termcharts pie 30 25 20 15 10 --labels "Chrome,Firefox,Safari,Edge,Other"
-termcharts pie 50 30 20 --title "Survey Results" --show-values
+termcharts pie 50 30 20 --labels "Desktop,Mobile,Tablet" --color
+termcharts pie 50 30 20 --labels "Desktop,Mobile,Tablet" --color --theme dark
 ```
 
 **[→ Full Pie Chart Documentation](docs/pie-chart.md)**

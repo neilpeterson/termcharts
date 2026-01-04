@@ -52,6 +52,7 @@ func TestPieChart_Render_BasicData(t *testing.T) {
 			pie := NewPieChart(
 				WithData(tt.data),
 				WithStyle(StyleUnicode),
+				WithColor(false), // Explicit no-color to use distinct characters
 			)
 			result := pie.Render()
 
@@ -59,9 +60,9 @@ func TestPieChart_Render_BasicData(t *testing.T) {
 				t.Error("expected non-empty result")
 			}
 
-			// Should contain block characters
-			if !strings.Contains(result, "█") {
-				t.Error("expected Unicode blocks in output")
+			// Should contain legend characters when colors disabled (●, ○, ◆, etc.)
+			if !strings.Contains(result, "●") && !strings.Contains(result, "○") && !strings.Contains(result, "◆") {
+				t.Error("expected Unicode slice characters in output")
 			}
 		})
 	}
@@ -145,14 +146,14 @@ func TestPieChart_Render_ASCIIMode(t *testing.T) {
 	)
 	result := pie.Render()
 
-	// Should contain ASCII character
-	if !strings.Contains(result, "#") {
-		t.Error("expected ASCII character '#' in output")
+	// Should contain ASCII slice characters (*, o, #, x, +, etc.)
+	if !strings.Contains(result, "*") && !strings.Contains(result, "o") && !strings.Contains(result, "#") {
+		t.Error("expected ASCII slice characters in output")
 	}
 
-	// Should NOT contain Unicode blocks
-	if strings.Contains(result, "█") {
-		t.Error("expected no Unicode blocks in ASCII mode")
+	// Should NOT contain Unicode slice characters
+	if strings.Contains(result, "●") || strings.Contains(result, "○") || strings.Contains(result, "◆") {
+		t.Error("expected no Unicode characters in ASCII mode")
 	}
 }
 
@@ -160,12 +161,13 @@ func TestPieChart_Render_UnicodeMode(t *testing.T) {
 	pie := NewPieChart(
 		WithData([]float64{50, 30, 20}),
 		WithStyle(StyleUnicode),
+		WithColor(false), // Explicit no-color to use distinct characters
 	)
 	result := pie.Render()
 
-	// Should contain Unicode blocks
-	if !strings.Contains(result, "█") {
-		t.Error("expected Unicode blocks in output")
+	// Should contain Unicode legend characters when colors disabled (●, ○, ◆, etc.)
+	if !strings.Contains(result, "●") && !strings.Contains(result, "○") && !strings.Contains(result, "◆") {
+		t.Error("expected Unicode slice characters in output")
 	}
 }
 

@@ -10,7 +10,7 @@ import (
 
 // PieChart represents a pie chart visualization.
 // Pie charts display data as proportional slices of a circle,
-// rendered using Unicode or ASCII characters in the terminal.
+// rendered using different characters for each slice.
 type PieChart struct {
 	opts *Options
 }
@@ -23,11 +23,13 @@ type Slice struct {
 	Color      string
 }
 
-// Unicode characters for pie chart rendering
-const (
-	pieBlockFull  = '█'
-	pieBlockASCII = '#'
-)
+// Slice characters - uniform character for pie, different for legend when no color
+var pieChar = '*'
+var pieCharASCII = '*'
+
+// Legend characters - different symbols for each slice (used when colors disabled)
+var legendChars = []rune{'●', '○', '◆', '◇', '■', '□', '▲', '△', '★', '☆'}
+var legendCharsASCII = []rune{'*', 'o', '#', 'x', '+', '@', '=', '~', '%', '&'}
 
 // NewPieChart creates a new pie chart with the given options.
 // At minimum, data must be provided via WithData option.
@@ -83,13 +85,9 @@ func (p *PieChart) Render() string {
 		result.WriteString("\n\n")
 	}
 
-	// Render circular pie visualization
-	pieVis := p.renderCircularPie(slices, colorEnabled, theme)
-	result.WriteString(pieVis)
-
-	// Render legend
-	legend := p.renderLegend(slices, colorEnabled, theme)
-	result.WriteString(legend)
+	// Render circular pie with legend on the right
+	pieWithLegend := p.renderCircularPieWithLegend(slices, colorEnabled, theme)
+	result.WriteString(pieWithLegend)
 
 	return result.String()
 }
@@ -134,37 +132,35 @@ func (p *PieChart) calculateSlices() []Slice {
 	return slices
 }
 
-// renderCircularPie renders a circular pie chart using ASCII/Unicode art.
-func (p *PieChart) renderCircularPie(slices []Slice, colorEnabled bool, theme *Theme) string {
-	var result strings.Builder
-
+// renderCircularPieWithLegend renders a circular pie chart with legend on the right.
+func (p *PieChart) renderCircularPieWithLegend(slices []Slice, colorEnabled bool, theme *Theme) string {
 	// Determine character set
 	useUnicode := p.shouldUseUnicode()
 
-	// Calculate radius based on available space
-	// Terminal chars are roughly 2x taller than wide, so we adjust
-	radius := 8
-	if p.opts.Height > 0 && p.opts.Height < 20 {
-		radius = p.opts.Height / 2
-		if radius < 4 {
-			radius = 4
-		}
+	// Pie uses uniform character, legend uses different chars when no color
+	pChar := pieChar
+	lChars := legendChars
+	if !useUnicode {
+		pChar = pieCharASCII
+		lChars = legendCharsASCII
 	}
 
-	// Character aspect ratio compensation (chars are ~2x taller than wide)
-	aspectRatio := 2.0
+	// Pie chart dimensions
+	radius := 6
+	aspectRatio := 2.0 // Terminal chars are ~2x taller than wide
 
-	// Calculate cumulative angles for each slice
+	// Calculate cumulative angles for each slice (starting at top, going clockwise)
 	angles := make([]float64, len(slices)+1)
-	angles[0] = -math.Pi / 2 // Start at top (12 o'clock)
+	angles[0] = -math.Pi / 2 // Start at 12 o'clock
 	for i, slice := range slices {
 		angles[i+1] = angles[i] + (slice.Percentage/100)*2*math.Pi
 	}
 
-	// Render the circle row by row
+	// Build pie chart rows
+	pieRows := make([]string, 0)
 	for y := -radius; y <= radius; y++ {
-		result.WriteString("  ") // Left padding
-		for x := -radius * int(aspectRatio); x <= radius*int(aspectRatio); x++ {
+		var row strings.Builder
+		for x := -int(float64(radius) * aspectRatio); x <= int(float64(radius)*aspectRatio); x++ {
 			// Calculate actual position accounting for aspect ratio
 			actualX := float64(x) / aspectRatio
 			actualY := float64(y)
@@ -173,122 +169,97 @@ func (p *PieChart) renderCircularPie(slices []Slice, colorEnabled bool, theme *T
 			distance := math.Sqrt(actualX*actualX + actualY*actualY)
 
 			// Check if point is inside the circle
-			if distance <= float64(radius) {
+			if distance <= float64(radius)-0.5 {
 				// Calculate angle of this point
 				angle := math.Atan2(actualY, actualX)
 
 				// Find which slice this angle belongs to
-				sliceIndex := 0
-				for i := 0; i < len(slices); i++ {
-					if angle >= angles[i] && angle < angles[i+1] {
-						sliceIndex = i
-						break
-					}
-					// Handle wrap-around at the top
-					if angles[i+1] > math.Pi && angle < angles[0] {
-						// Adjust angle for comparison
-						adjustedAngle := angle + 2*math.Pi
-						if adjustedAngle >= angles[i] && adjustedAngle < angles[i+1] {
-							sliceIndex = i
-							break
-						}
-					}
-				}
+				sliceIndex := p.findSliceForAngle(angle, angles, len(slices))
 
-				// Get character and color for this slice
-				char := string(pieBlockFull)
-				if !useUnicode {
-					char = string(pieBlockASCII)
-				}
-
-				color := theme.GetSeriesColor(sliceIndex)
+				// Apply color if enabled - use uniform character with different colors
 				if colorEnabled {
-					result.WriteString(Colorize(char, color, true))
+					color := theme.GetSeriesColor(sliceIndex)
+					row.WriteString(Colorize(string(pChar), color, true))
 				} else {
-					// In non-color mode, use different characters for each slice
-					chars := []rune{'█', '▓', '▒', '░', '▪', '▫'}
-					if !useUnicode {
-						chars = []rune{'#', '*', '+', 'o', 'x', '.'}
-					}
-					result.WriteString(string(chars[sliceIndex%len(chars)]))
+					// Without colors, use different characters to distinguish slices
+					char := lChars[sliceIndex%len(lChars)]
+					row.WriteString(string(char))
 				}
 			} else {
-				result.WriteString(" ")
+				row.WriteString(" ")
 			}
 		}
+		pieRows = append(pieRows, row.String())
+	}
+
+	// Build legend entries
+	legendEntries := make([]string, len(slices))
+	for i, slice := range slices {
+		var entry strings.Builder
+
+		if colorEnabled {
+			// With colors: use uniform char with slice color
+			color := theme.GetSeriesColor(i)
+			entry.WriteString(Colorize(string(pChar), color, true))
+		} else {
+			// Without colors: use different chars to match pie
+			char := lChars[i%len(lChars)]
+			entry.WriteString(string(char))
+		}
+		entry.WriteString(" ")
+
+		// Format: symbol label percentage [value]
+		if p.opts.ShowValues {
+			entry.WriteString(fmt.Sprintf("%-8s %5.1f%% [%.1f]", slice.Label, slice.Percentage, slice.Value))
+		} else {
+			entry.WriteString(fmt.Sprintf("%-8s %5.1f%%", slice.Label, slice.Percentage))
+		}
+
+		legendEntries[i] = entry.String()
+	}
+
+	// Combine pie chart and legend side by side
+	var result strings.Builder
+	legendStartRow := (len(pieRows) - len(legendEntries)) / 2
+	if legendStartRow < 0 {
+		legendStartRow = 0
+	}
+
+	for i, pieRow := range pieRows {
+		result.WriteString(pieRow)
+		result.WriteString("   ") // Gap between pie and legend
+
+		// Add legend entry if available for this row
+		legendIdx := i - legendStartRow
+		if legendIdx >= 0 && legendIdx < len(legendEntries) {
+			result.WriteString(legendEntries[legendIdx])
+		}
+
 		result.WriteString("\n")
 	}
 
-	result.WriteString("\n")
 	return result.String()
 }
 
-// renderLegend renders the pie chart legend with labels, values, and percentages.
-func (p *PieChart) renderLegend(slices []Slice, colorEnabled bool, theme *Theme) string {
-	var result strings.Builder
+// findSliceForAngle finds which slice a given angle belongs to.
+func (p *PieChart) findSliceForAngle(angle float64, angles []float64, numSlices int) int {
+	for i := 0; i < numSlices; i++ {
+		startAngle := angles[i]
+		endAngle := angles[i+1]
 
-	// Determine character set
-	useUnicode := p.shouldUseUnicode()
-
-	// Characters for non-color mode legend
-	legendChars := []rune{'█', '▓', '▒', '░', '▪', '▫'}
-	if !useUnicode {
-		legendChars = []rune{'#', '*', '+', 'o', 'x', '.'}
-	}
-
-	// Find max label width for alignment
-	maxLabelWidth := 0
-	for _, slice := range slices {
-		if len(slice.Label) > maxLabelWidth {
-			maxLabelWidth = len(slice.Label)
-		}
-	}
-
-	// Render each legend entry
-	for i, slice := range slices {
-		// Color indicator
-		color := theme.GetSeriesColor(i)
-		indicator := string(pieBlockFull)
-		if !useUnicode {
-			indicator = string(pieBlockASCII)
-		}
-
-		if colorEnabled {
-			indicator = Colorize(indicator, color, true)
-		} else {
-			indicator = string(legendChars[i%len(legendChars)])
-		}
-
-		result.WriteString("  ")
-		result.WriteString(indicator)
-		result.WriteString(" ")
-
-		// Label
-		labelText := fmt.Sprintf("%-*s", maxLabelWidth, slice.Label)
-		if colorEnabled {
-			labelText = Colorize(labelText, theme.Text, true)
-		}
-		result.WriteString(labelText)
-
-		// Value and percentage
-		if p.opts.ShowValues {
-			valueText := fmt.Sprintf("  %6.1f", slice.Value)
-			if colorEnabled {
-				valueText = Colorize(valueText, theme.Muted, true)
+		// Handle the wrap-around case
+		if endAngle > math.Pi {
+			// Slice crosses the -π/π boundary
+			if angle >= startAngle || angle < endAngle-2*math.Pi {
+				return i
 			}
-			result.WriteString(valueText)
+		} else if angle >= startAngle && angle < endAngle {
+			return i
 		}
-
-		percentText := fmt.Sprintf("  (%5.1f%%)", slice.Percentage)
-		if colorEnabled {
-			percentText = Colorize(percentText, theme.Muted, true)
-		}
-		result.WriteString(percentText)
-
-		result.WriteString("\n")
 	}
 
-	return result.String()
+	// Default to last slice
+	return numSlices - 1
 }
 
 // shouldUseUnicode determines whether to use Unicode characters based on style.

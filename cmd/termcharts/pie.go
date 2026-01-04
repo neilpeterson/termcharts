@@ -16,6 +16,7 @@ var (
 	pieShowValues bool
 	pieTitle      string
 	pieLabels     string
+	pieTheme      string
 )
 
 var pieCmd = &cobra.Command{
@@ -66,6 +67,7 @@ func init() {
 	pieCmd.Flags().BoolVar(&pieShowValues, "show-values", false, "display numeric values")
 	pieCmd.Flags().StringVarP(&pieTitle, "title", "t", "", "chart title")
 	pieCmd.Flags().StringVarP(&pieLabels, "labels", "l", "", "comma-separated labels for each slice")
+	pieCmd.Flags().StringVar(&pieTheme, "theme", "", "color theme: default, dark, light, mono")
 }
 
 func runPie(cmd *cobra.Command, args []string) error {
@@ -117,6 +119,22 @@ func runPie(cmd *cobra.Command, args []string) error {
 	} else if pieColor {
 		colorEnabled := true
 		opts = append(opts, termcharts.WithColor(colorEnabled))
+	}
+
+	// Apply theme
+	if pieTheme != "" {
+		switch strings.ToLower(pieTheme) {
+		case "dark":
+			opts = append(opts, termcharts.WithTheme(termcharts.DarkTheme))
+		case "light":
+			opts = append(opts, termcharts.WithTheme(termcharts.LightTheme))
+		case "mono", "monochrome":
+			opts = append(opts, termcharts.WithTheme(termcharts.MonochromeTheme))
+		case "default":
+			opts = append(opts, termcharts.WithTheme(termcharts.DefaultTheme))
+		default:
+			return fmt.Errorf("unknown theme: %s (use: default, dark, light, mono)", pieTheme)
+		}
 	}
 
 	// Create and render pie chart

@@ -77,28 +77,17 @@ fmt.Println(pie.Render())
 
 Output:
 ```
-              █
-       ██████████████
-    ████████████████████
-  ██████████████████████████
- ████████████████████████████
- ████████████████████████████
-████████████████████████████████
- ██████████████████████████████
- ██████████████████████████████
-  ████████████████████████████
-   ██████████████████████████
-    ████████████████████████
-      ██████████████████████
-        ████████████████████
-           ██████████████
-              ████
-
-  █ Chrome   ( 30.0%)
-  █ Firefox  ( 25.0%)
-  █ Safari   ( 20.0%)
-  █ Edge     ( 15.0%)
-  █ Other    ( 10.0%)
+        ■■■■●●●●●
+     ◇◇■■■■■●●●●●●●●
+   ◇◇◇◇◇■■■■●●●●●●●●●●
+  ◇◇◇◇◇◇◇◇■■●●●●●●●●●●●     ● Chrome    30.0%
+  ◇◇◇◇◇◇◇◇◇■●●●●●●●●●●●     ○ Firefox   25.0%
+ ◇◇◇◇◇◇◇◇◇◇◇●●●●●●●●●●●●    ◆ Safari    20.0%
+  ◆◆◆◆◆◆◆◆◆◆○○○○○○○●●●●     ◇ Edge      15.0%
+  ◆◆◆◆◆◆◆◆◆○○○○○○○○○○○○     ■ Other     10.0%
+   ◆◆◆◆◆◆◆◆○○○○○○○○○○○
+     ◆◆◆◆◆○○○○○○○○○○
+        ◆○○○○○○○○
 ```
 
 ### With Title and Values
@@ -117,40 +106,31 @@ Output:
 ```
 Revenue by Product ($)
 
-              ██
-       ██████████████
-    ████████████████████
-  ██████████████████████████
- ████████████████████████████
- ████████████████████████████
-████████████████████████████████
- ██████████████████████████████
- ██████████████████████████████
-  ████████████████████████████
-   ██████████████████████████
-    ████████████████████████
-      ██████████████████████
-        ████████████████████
-           ██████████████
-              ████
-
-  █ Product A  1250.5  ( 35.7%)
-  █ Product B   980.2  ( 28.0%)
-  █ Product C   750.0  ( 21.4%)
-  █ Product D   520.8  ( 14.9%)
+        ◇◇◇◇●●●●●
+     ◇◇◇◇◇◇◇●●●●●●●●
+   ◆◇◇◇◇◇◇◇◇●●●●●●●●●●
+  ◆◆◆◆◆◇◇◇◇◇●●●●●●●●●●●     ● Product A  35.7% [1250.5]
+  ◆◆◆◆◆◆◆◆◇◇●●●●●●●●●●●     ○ Product B  28.0% [980.2]
+ ◆◆◆◆◆◆◆◆◆◆◆●●●●●●●●●●●●    ◆ Product C  21.4% [750.0]
+  ◆◆◆◆◆◆◆◆○○○○○●●●●●●●●     ◇ Product D  14.9% [520.8]
+  ◆◆◆◆◆◆○○○○○○○○○○●●●●●
+   ◆◆◆○○○○○○○○○○○○○○●●
+     ○○○○○○○○○○○○○○○
+        ○○○○○○○○○
 ```
 
 ### With Color
 
 ```go
 pie := termcharts.NewPieChart(
-    termcharts.WithData([]float64{40, 35, 25}),
+    termcharts.WithData([]float64{50, 30, 20}),
     termcharts.WithLabels([]string{"Desktop", "Mobile", "Tablet"}),
-    termcharts.WithTitle("Traffic by Device"),
     termcharts.WithColor(true),
 )
 fmt.Println(pie.Render())
 ```
+
+![Pie Chart with Color](images/pie-chart-color.png)
 
 ### ASCII Mode
 
@@ -298,12 +278,16 @@ When colors are enabled:
 
 ### Character Sets
 
-**Unicode Mode:**
-- Full block: █
-- Provides clean, solid visualization
+**With Colors Enabled:**
+- Asterisk character: *
+- Each slice colored differently from theme
 
-**ASCII Mode:**
-- Hash character: #
+**Without Colors (Unicode):**
+- Different symbols per slice: ●, ○, ◆, ◇, ■, □, ▲, △, ★, ☆
+- Symbols distinguish slices visually
+
+**Without Colors (ASCII):**
+- Different characters per slice: *, o, #, x, +, @, =, ~, %, &
 - Maximum compatibility with all terminals
 
 ## Best Practices
