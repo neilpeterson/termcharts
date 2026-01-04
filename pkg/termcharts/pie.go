@@ -83,8 +83,8 @@ func (p *PieChart) Render() string {
 		result.WriteString("\n\n")
 	}
 
-	// Render pie visualization
-	pieVis := p.renderPieVisualization(slices, colorEnabled, theme)
+	// Render circular pie visualization
+	pieVis := p.renderCircularPie(slices, colorEnabled, theme)
 	result.WriteString(pieVis)
 
 	// Render legend
@@ -134,48 +134,92 @@ func (p *PieChart) calculateSlices() []Slice {
 	return slices
 }
 
-// renderPieVisualization renders the pie chart as a horizontal bar representation.
-// Each slice is shown as a proportional section of a bar.
-func (p *PieChart) renderPieVisualization(slices []Slice, colorEnabled bool, theme *Theme) string {
+// renderCircularPie renders a circular pie chart using ASCII/Unicode art.
+func (p *PieChart) renderCircularPie(slices []Slice, colorEnabled bool, theme *Theme) string {
 	var result strings.Builder
 
 	// Determine character set
 	useUnicode := p.shouldUseUnicode()
 
-	// Calculate bar width
-	barWidth := p.opts.Width - 4
-	if barWidth < 20 {
-		barWidth = 60
+	// Calculate radius based on available space
+	// Terminal chars are roughly 2x taller than wide, so we adjust
+	radius := 8
+	if p.opts.Height > 0 && p.opts.Height < 20 {
+		radius = p.opts.Height / 2
+		if radius < 4 {
+			radius = 4
+		}
 	}
 
-	// Render the pie as a proportional bar
-	result.WriteString("  ")
+	// Character aspect ratio compensation (chars are ~2x taller than wide)
+	aspectRatio := 2.0
+
+	// Calculate cumulative angles for each slice
+	angles := make([]float64, len(slices)+1)
+	angles[0] = -math.Pi / 2 // Start at top (12 o'clock)
 	for i, slice := range slices {
-		// Calculate number of characters for this slice
-		sliceWidth := int(math.Round(float64(barWidth) * (slice.Percentage / 100)))
-		if sliceWidth < 1 && slice.Percentage > 0 {
-			sliceWidth = 1
-		}
+		angles[i+1] = angles[i] + (slice.Percentage/100)*2*math.Pi
+	}
 
-		// Get color for this slice
-		color := theme.GetSeriesColor(i)
+	// Render the circle row by row
+	for y := -radius; y <= radius; y++ {
+		result.WriteString("  ") // Left padding
+		for x := -radius * int(aspectRatio); x <= radius*int(aspectRatio); x++ {
+			// Calculate actual position accounting for aspect ratio
+			actualX := float64(x) / aspectRatio
+			actualY := float64(y)
 
-		// Render slice
-		char := string(pieBlockFull)
-		if !useUnicode {
-			char = string(pieBlockASCII)
-		}
+			// Calculate distance from center
+			distance := math.Sqrt(actualX*actualX + actualY*actualY)
 
-		for j := 0; j < sliceWidth; j++ {
-			if colorEnabled {
-				result.WriteString(Colorize(char, color, true))
+			// Check if point is inside the circle
+			if distance <= float64(radius) {
+				// Calculate angle of this point
+				angle := math.Atan2(actualY, actualX)
+
+				// Find which slice this angle belongs to
+				sliceIndex := 0
+				for i := 0; i < len(slices); i++ {
+					if angle >= angles[i] && angle < angles[i+1] {
+						sliceIndex = i
+						break
+					}
+					// Handle wrap-around at the top
+					if angles[i+1] > math.Pi && angle < angles[0] {
+						// Adjust angle for comparison
+						adjustedAngle := angle + 2*math.Pi
+						if adjustedAngle >= angles[i] && adjustedAngle < angles[i+1] {
+							sliceIndex = i
+							break
+						}
+					}
+				}
+
+				// Get character and color for this slice
+				char := string(pieBlockFull)
+				if !useUnicode {
+					char = string(pieBlockASCII)
+				}
+
+				color := theme.GetSeriesColor(sliceIndex)
+				if colorEnabled {
+					result.WriteString(Colorize(char, color, true))
+				} else {
+					// In non-color mode, use different characters for each slice
+					chars := []rune{'█', '▓', '▒', '░', '▪', '▫'}
+					if !useUnicode {
+						chars = []rune{'#', '*', '+', 'o', 'x', '.'}
+					}
+					result.WriteString(string(chars[sliceIndex%len(chars)]))
+				}
 			} else {
-				result.WriteString(char)
+				result.WriteString(" ")
 			}
 		}
+		result.WriteString("\n")
 	}
-	result.WriteString("\n\n")
 
+	result.WriteString("\n")
 	return result.String()
 }
 
@@ -185,6 +229,12 @@ func (p *PieChart) renderLegend(slices []Slice, colorEnabled bool, theme *Theme)
 
 	// Determine character set
 	useUnicode := p.shouldUseUnicode()
+
+	// Characters for non-color mode legend
+	legendChars := []rune{'█', '▓', '▒', '░', '▪', '▫'}
+	if !useUnicode {
+		legendChars = []rune{'#', '*', '+', 'o', 'x', '.'}
+	}
 
 	// Find max label width for alignment
 	maxLabelWidth := 0
@@ -205,7 +255,10 @@ func (p *PieChart) renderLegend(slices []Slice, colorEnabled bool, theme *Theme)
 
 		if colorEnabled {
 			indicator = Colorize(indicator, color, true)
+		} else {
+			indicator = string(legendChars[i%len(legendChars)])
 		}
+
 		result.WriteString("  ")
 		result.WriteString(indicator)
 		result.WriteString(" ")
