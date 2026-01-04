@@ -213,13 +213,29 @@ pie := termcharts.NewPieChart(
 fmt.Println(pie.Render())
 ```
 
-![Pie Chart Example](docs/images/pie-chart-color.png)
+Output (without color):
+```
+        ◆◆◆◆●●●●●
+     ◆◆◆◆◆◆◆●●●●●●●●
+   ◆◆◆◆◆◆◆◆◆●●●●●●●●●●
+  ◆◆◆◆◆◆◆◆◆◆●●●●●●●●●●●
+  ○○○○◆◆◆◆◆◆●●●●●●●●●●●     ● Desktop   50.0%
+ ○○○○○○○○○○○●●●●●●●●●●●●    ○ Mobile    30.0%
+  ○○○○○○○○○○○●●●●●●●●●●     ◆ Tablet    20.0%
+  ○○○○○○○○○○○●●●●●●●●●●
+   ○○○○○○○○○○●●●●●●●●●
+     ○○○○○○○○●●●●●●●
+        ○○○○○●●●●
+```
 
 ```bash
 # CLI
-termcharts pie 50 30 20 --labels "Desktop,Mobile,Tablet" --color
 termcharts pie 50 30 20 --labels "Desktop,Mobile,Tablet" --color --theme dark
 ```
+
+![Pie Chart Example](docs/images/pie-chart-color.png)
+
+*Screenshot used to display colors, which cannot be shown in markdown.*
 
 **[→ Full Pie Chart Documentation](docs/pie-chart.md)**
 
