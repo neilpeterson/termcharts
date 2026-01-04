@@ -61,7 +61,7 @@ var (
 		Muted:      "gray",
 		Background: "",
 		Text:       "",
-		Series:     []string{"blue", "green", "yellow", "cyan", "magenta", "red"},
+		Series:     []string{"red", "blue", "yellow", "magenta", "green", "cyan"},
 	}
 
 	// DarkTheme is optimized for dark terminal backgrounds.
