@@ -239,9 +239,47 @@ termcharts pie 50 30 20 --labels "Desktop,Mobile,Tablet" --color --theme dark
 
 **[→ Full Pie Chart Documentation](docs/pie-chart.md)**
 
+### Line Charts ✓
+
+Line charts visualize data trends with support for ASCII, Unicode, and high-resolution Braille rendering.
+
+```go
+// Library
+line := termcharts.NewLineChart(
+    termcharts.WithData([]float64{1, 5, 2, 8, 3, 7, 4, 6}),
+    termcharts.WithTitle("Sales Trend"),
+    termcharts.WithColor(true),
+)
+fmt.Println(line.Render())
+```
+
+Output:
+```
+Sales Trend
+    8.0                  •
+    6.3                 / \    •
+    4.7        •       /   \  / \
+    3.0       / \     /     \/   \  •
+    1.3      /   \   /            \/
+    1.0     •     •/
+        ────────────────────────────
+```
+
+```bash
+# CLI - Standard ASCII/Unicode mode
+termcharts line 1 5 2 8 3 7 --color --title "Sales Trend"
+
+# High-resolution Braille mode
+termcharts line 1 5 2 8 3 7 --braille --color
+
+# With labels
+termcharts line 150 230 180 290 --labels "Q1,Q2,Q3,Q4" --title "Quarterly Revenue"
+```
+
+**[→ Full Line Chart Documentation](docs/line-chart.md)**
+
 ### Coming Soon
 
-- **Line Charts** - ASCII and high-resolution Braille line charts
 - **Heatmaps** - 2D data visualization with color gradients
 - **Scatter Plots** - XY coordinate plotting
 - **Gauges** - Progress bars and percentage indicators
@@ -274,11 +312,12 @@ termcharts pie 50 30 20 --labels "Desktop,Mobile,Tablet" --color --theme dark
 - [x] CLI `pie` subcommand
 - [x] Comprehensive tests and documentation
 
-### v0.4.0 - Line Charts
-- [ ] ASCII line charts
-- [ ] Braille high-resolution charts
-- [ ] Multi-series support
-- [ ] CLI `line` subcommand
+### v0.4.0 - Line Charts ✓
+- [x] ASCII line charts with box-drawing characters
+- [x] Braille high-resolution charts
+- [x] Multi-series support with legend
+- [x] CLI `line` subcommand
+- [x] Comprehensive tests and documentation
 
 See [docs/status.md](docs/status.md) for detailed status and milestones.
 
@@ -288,6 +327,7 @@ See [docs/status.md](docs/status.md) for detailed status and milestones.
 - **[Sparkline Guide](docs/sparkline.md)** - Complete sparkline documentation with examples, API reference, and CLI usage
 - **[Bar Chart Guide](docs/bar-chart.md)** - Complete bar chart documentation with examples, API reference, and CLI usage
 - **[Pie Chart Guide](docs/pie-chart.md)** - Complete pie chart documentation with examples, API reference, and CLI usage
+- **[Line Chart Guide](docs/line-chart.md)** - Complete line chart documentation with ASCII, Unicode, and Braille modes
 - **[Project Status](docs/status.md)** - Current development status and roadmap
 - **[GoDoc](https://pkg.go.dev/github.com/neilpeterson/termcharts)** - Generated API documentation (coming soon)
 
