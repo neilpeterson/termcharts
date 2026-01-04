@@ -34,6 +34,7 @@ Present the information in a clear, scannable format:
 - Highlight important items
 - Keep it concise but informative
 - Make it easy to see what needs attention
+- Mention `/project-progress` for visual progress chart
 
 ## Important Notes:
 
