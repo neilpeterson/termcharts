@@ -34,6 +34,36 @@ Use descriptive branch names:
 - `fix/sparkline-unicode-rendering`
 - `docs/update-api-reference`
 
+### Make Commands
+
+The project uses a Makefile for common development tasks:
+
+```bash
+# Run tests
+make test
+
+# Run tests with coverage
+make cover
+
+# Run linter
+make lint
+
+# Build binary
+make build
+
+# Install to $GOPATH/bin
+make install
+
+# Cross-compile for all platforms
+make release
+
+# Clean build artifacts
+make clean
+
+# Download dependencies
+make deps
+```
+
 ### Making Changes
 
 1. **Write code** following the existing style and conventions

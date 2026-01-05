@@ -333,31 +333,6 @@ Sales Trend
 - **[Project Status](docs/status.md)** - Current development status and roadmap
 - **[GoDoc](https://pkg.go.dev/github.com/neilpeterson/termcharts)** - Generated API documentation (coming soon)
 
-## Development
-
-```bash
-# Run tests
-make test
-
-# Run tests with coverage
-make cover
-
-# Run linter
-make lint
-
-# Build binary
-make build
-
-# Install to $GOPATH/bin
-make install
-
-# Cross-compile for all platforms
-make release
-
-# Clean build artifacts
-make clean
-```
-
 ## Design Principles
 
 - **Sensible defaults**: Charts look good with zero configuration
@@ -370,25 +345,6 @@ make clean
 
 - Go 1.21 or higher
 - Terminal with Unicode support (recommended, ASCII fallback available)
-
-## Testing
-
-termcharts has comprehensive test coverage (95%+):
-
-```bash
-# Run all tests
-go test ./...
-
-# Run with coverage
-go test -cover ./...
-
-# Run with race detector
-go test -race ./...
-```
-
-The project uses GitHub Actions for CI/CD with automated testing across:
-- Multiple platforms: Linux, macOS, Windows
-- Multiple Go versions: 1.21, 1.22, 1.23
 
 ## License
 
