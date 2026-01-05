@@ -193,6 +193,18 @@ Output:
 Q1  Q2  Q3  Q4
 ```
 
+**With values:**
+```bash
+termcharts bar 120 98 145 --labels "North,South,East" --show-values
+```
+
+Output:
+```
+North  ████████████████████████████████████████████████████████ 120.0
+South  ██████████████████████████████████████████████ 98.0
+East   ███████████████████████████████████████████████████████████████████ 145.0
+```
+
 **Grouped bar charts (multiple series side-by-side):**
 ```go
 // Library - Grouped bar chart
@@ -217,18 +229,6 @@ termcharts bar --series '[{"label":"2023","data":[10,20,30]},{"label":"2024","da
 ![Grouped Bar Chart Example](docs/images/bar-chart-grouped.png)
 
 *Screenshot shows grouped bars with different colors for each series.*
-
-**With values:**
-```bash
-termcharts bar 120 98 145 --labels "North,South,East" --show-values
-```
-
-Output:
-```
-North  ████████████████████████████████████████████████████████ 120.0
-South  ██████████████████████████████████████████████ 98.0
-East   ███████████████████████████████████████████████████████████████████ 145.0
-```
 
 **[→ Full Bar Chart Documentation](docs/bar-chart.md)**
 
@@ -322,50 +322,6 @@ Sales Trend
 - **Heatmaps** - 2D data visualization with color gradients
 - **Scatter Plots** - XY coordinate plotting
 - **Gauges** - Progress bars and percentage indicators
-
-## Roadmap
-
-### v0.1.0 - Core Library + Sparklines ✓
-- [x] Project scaffolding and build system
-- [x] Core types and interfaces
-- [x] Terminal utilities (size, color, Unicode detection)
-- [x] Sparkline implementation with comprehensive tests (95% coverage)
-- [x] Sparkline CLI command (`termcharts spark`)
-- [x] Unit tests for all core components (95% coverage)
-- [x] GitHub Actions CI/CD (multi-platform, multi-version testing)
-- [x] Complete API documentation
-
-### v0.2.0 - Bar Charts ✓
-- [x] Horizontal bar charts
-- [x] Vertical bar charts
-- [x] Labels and axis rendering
-- [x] Value display option
-- [x] CLI `bar` subcommand
-- [x] Comprehensive tests and documentation
-
-### v0.3.0 - Pie Charts ✓
-- [x] Pie chart with Unicode/ASCII modes
-- [x] Percentage and value display
-- [x] Legend and color coding
-- [x] CLI `pie` subcommand
-- [x] Comprehensive tests and documentation
-
-### v0.4.0 - Line Charts ✓
-- [x] ASCII line charts with box-drawing characters
-- [x] Braille high-resolution charts
-- [x] Multi-series support with legend
-- [x] CLI `line` subcommand
-- [x] Comprehensive tests and documentation
-
-### v0.5.0 - Grouped & Stacked Bar Charts ✓
-- [x] Grouped bar charts (multiple series side-by-side)
-- [x] Stacked bar charts (series stacked on top of each other)
-- [x] Legend support for multi-series charts
-- [x] CLI `--grouped`, `--stacked`, `--legend` flags
-- [x] CLI integration tests
-- [x] Comprehensive tests and documentation
-
-See [docs/status.md](docs/status.md) for detailed status and milestones.
 
 ## Documentation
 
