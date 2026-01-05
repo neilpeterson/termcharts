@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -18,6 +19,10 @@ var (
 	barShowValues bool
 	barTitle      string
 	barLabels     string
+	barGrouped    bool
+	barStacked    bool
+	barShowLegend bool
+	barSeries     string
 )
 
 var barCmd = &cobra.Command{
@@ -37,6 +42,9 @@ Data format:
   - One number per line, or
   - Space-separated numbers on one line, or
   - Comma-separated numbers
+
+For multi-series charts (grouped/stacked), use --series flag with JSON:
+  --series '[{"label":"2023","data":[10,20,30]},{"label":"2024","data":[15,25,35]}]'
 
 Labels can be provided via --labels flag as comma-separated values.
 
@@ -60,7 +68,16 @@ Examples:
   termcharts bar 10 20 30 --ascii
 
   # With color
-  termcharts bar 10 20 30 --color`,
+  termcharts bar 10 20 30 --color
+
+  # Grouped bar chart (multiple series side-by-side)
+  termcharts bar --series '[{"label":"2023","data":[10,20,30]},{"label":"2024","data":[15,25,35]}]' --grouped --labels "Q1,Q2,Q3"
+
+  # Stacked bar chart (multiple series stacked)
+  termcharts bar --series '[{"label":"Product A","data":[10,20,30]},{"label":"Product B","data":[5,10,15]}]' --stacked --labels "Q1,Q2,Q3"
+
+  # Vertical grouped bar chart with legend
+  termcharts bar --series '[{"label":"2023","data":[10,20,30]},{"label":"2024","data":[15,25,35]}]' --grouped --vertical --legend`,
 	RunE: runBar,
 }
 
@@ -76,22 +93,50 @@ func init() {
 	barCmd.Flags().BoolVar(&barShowValues, "show-values", false, "display numeric values on bars")
 	barCmd.Flags().StringVarP(&barTitle, "title", "t", "", "chart title")
 	barCmd.Flags().StringVarP(&barLabels, "labels", "l", "", "comma-separated labels for each bar")
+	barCmd.Flags().BoolVarP(&barGrouped, "grouped", "g", false, "display multiple series as grouped bars")
+	barCmd.Flags().BoolVarP(&barStacked, "stacked", "s", false, "display multiple series as stacked bars")
+	barCmd.Flags().BoolVar(&barShowLegend, "legend", false, "show legend for multi-series charts")
+	barCmd.Flags().StringVar(&barSeries, "series", "", "JSON array of series: [{\"label\":\"name\",\"data\":[1,2,3]}]")
 }
 
 func runBar(cmd *cobra.Command, args []string) error {
-	// Parse data from various sources
-	data, err := parseBarData(args)
-	if err != nil {
-		return fmt.Errorf("failed to parse data: %w", err)
-	}
-
-	if len(data) == 0 {
-		return fmt.Errorf("no data provided")
-	}
-
 	// Build options
-	opts := []termcharts.Option{
-		termcharts.WithData(data),
+	var opts []termcharts.Option
+
+	// Check if multi-series data is provided
+	if barSeries != "" {
+		series, err := parseSeriesJSON(barSeries)
+		if err != nil {
+			return fmt.Errorf("failed to parse series JSON: %w", err)
+		}
+		if len(series) == 0 {
+			return fmt.Errorf("no series data provided")
+		}
+		opts = append(opts, termcharts.WithSeries(series))
+
+		// Set bar mode
+		if barStacked {
+			opts = append(opts, termcharts.WithBarMode(termcharts.BarModeStacked))
+		} else {
+			opts = append(opts, termcharts.WithBarMode(termcharts.BarModeGrouped))
+		}
+
+		// Show legend by default for multi-series, or if explicitly requested
+		if barShowLegend {
+			opts = append(opts, termcharts.WithShowLegend(true))
+		}
+	} else {
+		// Parse single-series data from various sources
+		data, err := parseBarData(args)
+		if err != nil {
+			return fmt.Errorf("failed to parse data: %w", err)
+		}
+
+		if len(data) == 0 {
+			return fmt.Errorf("no data provided")
+		}
+
+		opts = append(opts, termcharts.WithData(data))
 	}
 
 	// Apply width
@@ -173,4 +218,29 @@ func parseLabels(labelsStr string) []string {
 		}
 	}
 	return labels
+}
+
+// seriesJSON is used for JSON parsing of series data.
+type seriesJSON struct {
+	Label string    `json:"label"`
+	Data  []float64 `json:"data"`
+	Color string    `json:"color,omitempty"`
+}
+
+// parseSeriesJSON parses JSON array of series data.
+func parseSeriesJSON(jsonStr string) ([]termcharts.Series, error) {
+	var seriesData []seriesJSON
+	if err := json.Unmarshal([]byte(jsonStr), &seriesData); err != nil {
+		return nil, err
+	}
+
+	result := make([]termcharts.Series, len(seriesData))
+	for i, s := range seriesData {
+		result[i] = termcharts.Series{
+			Label: s.Label,
+			Data:  s.Data,
+			Color: s.Color,
+		}
+	}
+	return result, nil
 }

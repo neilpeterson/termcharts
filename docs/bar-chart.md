@@ -7,6 +7,9 @@ Bar charts are one of the core visualization types in termcharts. They display d
 - **Horizontal and Vertical Orientation**: Display bars left-to-right or bottom-to-top
 - **Labels and Titles**: Add meaningful labels to each bar and a title to the chart
 - **Value Display**: Optionally show numeric values alongside bars
+- **Grouped Bar Charts**: Display multiple series side-by-side for comparison
+- **Stacked Bar Charts**: Stack multiple series on top of each other
+- **Legend Support**: Show series labels with color indicators
 - **Unicode and ASCII Modes**: Automatic detection or manual selection
 - **Colored Output**: Color support with auto-detection
 - **Flexible Sizing**: Customizable width and height
@@ -40,6 +43,8 @@ const (
 - `Bar(data []float64) string` - Convenience function for quick bar charts
 - `BarWithLabels(data []float64, labels []string) string` - Bar chart with labels
 - `BarVertical(data []float64) string` - Vertical bar chart
+- `BarGrouped(series []Series) string` - Grouped bar chart with multiple series
+- `BarStacked(series []Series) string` - Stacked bar chart with multiple series
 
 ## Library API
 
@@ -142,6 +147,88 @@ fmt.Println(termcharts.BarWithLabels(
 fmt.Println(termcharts.BarVertical([]float64{10, 20, 15, 25}))
 ```
 
+### Grouped Bar Charts
+
+Grouped bar charts display multiple data series side-by-side, making it easy to compare values across categories.
+
+```go
+series := []termcharts.Series{
+    {Label: "2023", Data: []float64{10, 20, 30}},
+    {Label: "2024", Data: []float64{15, 25, 35}},
+}
+chart := termcharts.NewBarChart(
+    termcharts.WithSeries(series),
+    termcharts.WithLabels([]string{"Q1", "Q2", "Q3"}),
+    termcharts.WithBarMode(termcharts.BarModeGrouped),
+    termcharts.WithShowLegend(true),
+    termcharts.WithColor(true),
+)
+fmt.Println(chart.Render())
+
+// Or use the convenience function
+fmt.Println(termcharts.BarGrouped(series))
+```
+
+### Stacked Bar Charts
+
+Stacked bar charts display multiple data series stacked on top of each other, showing the total as well as the contribution of each series.
+
+```go
+series := []termcharts.Series{
+    {Label: "Product A", Data: []float64{10, 20, 30}},
+    {Label: "Product B", Data: []float64{5, 10, 15}},
+    {Label: "Product C", Data: []float64{3, 8, 12}},
+}
+chart := termcharts.NewBarChart(
+    termcharts.WithSeries(series),
+    termcharts.WithLabels([]string{"Q1", "Q2", "Q3"}),
+    termcharts.WithBarMode(termcharts.BarModeStacked),
+    termcharts.WithShowLegend(true),
+    termcharts.WithColor(true),
+)
+fmt.Println(chart.Render())
+
+// Or use the convenience function
+fmt.Println(termcharts.BarStacked(series))
+```
+
+### Vertical Grouped/Stacked Bar Charts
+
+Both grouped and stacked bar charts support vertical orientation:
+
+```go
+series := []termcharts.Series{
+    {Label: "Desktop", Data: []float64{50, 60, 70}},
+    {Label: "Mobile", Data: []float64{30, 40, 45}},
+}
+chart := termcharts.NewBarChart(
+    termcharts.WithSeries(series),
+    termcharts.WithLabels([]string{"Jan", "Feb", "Mar"}),
+    termcharts.WithBarMode(termcharts.BarModeGrouped),
+    termcharts.WithDirection(termcharts.Vertical),
+    termcharts.WithHeight(15),
+    termcharts.WithShowLegend(true),
+)
+fmt.Println(chart.Render())
+```
+
+### Custom Series Colors
+
+Each series can have a custom color:
+
+```go
+series := []termcharts.Series{
+    {Label: "Revenue", Data: []float64{100, 150, 200}, Color: "green"},
+    {Label: "Expenses", Data: []float64{80, 90, 100}, Color: "red"},
+}
+chart := termcharts.NewBarChart(
+    termcharts.WithSeries(series),
+    termcharts.WithBarMode(termcharts.BarModeGrouped),
+    termcharts.WithColor(true),
+)
+fmt.Println(chart.Render())
+```
+
 ## CLI Usage
 
 The `termcharts bar` command provides a convenient way to create bar charts from the command line.
@@ -207,6 +294,34 @@ termcharts bar 10 20 30 --width 60
 termcharts bar 10 20 30 --vertical --height 20
 ```
 
+### Grouped and Stacked Bar Charts (CLI)
+
+```bash
+# Grouped bar chart - multiple series side-by-side
+termcharts bar --series '[{"label":"2023","data":[10,20,30]},{"label":"2024","data":[15,25,35]}]' \
+    --grouped --labels "Q1,Q2,Q3" --color
+
+# Stacked bar chart - series stacked on top of each other
+termcharts bar --series '[{"label":"Product A","data":[10,20,30]},{"label":"Product B","data":[5,10,15]}]' \
+    --stacked --labels "Q1,Q2,Q3" --color
+
+# With legend
+termcharts bar --series '[{"label":"Desktop","data":[50,60]},{"label":"Mobile","data":[30,40]}]' \
+    --grouped --legend --labels "Jan,Feb"
+
+# Vertical grouped bar chart
+termcharts bar --series '[{"label":"2023","data":[10,20,30]},{"label":"2024","data":[15,25,35]}]' \
+    --grouped --vertical --legend --labels "Q1,Q2,Q3" --color
+
+# With custom colors in JSON
+termcharts bar --series '[{"label":"Revenue","data":[100,150],"color":"green"},{"label":"Expenses","data":[80,90],"color":"red"}]' \
+    --grouped --legend --color
+
+# Stacked with title
+termcharts bar --series '[{"label":"A","data":[10,20]},{"label":"B","data":[5,10]}]' \
+    --stacked --title "Sales by Product" --labels "Q1,Q2"
+```
+
 ### Complete Example
 
 ```bash
@@ -222,14 +337,17 @@ termcharts bar 120 98 145 132 \
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `WithData()` | []float64 | required | Data values to visualize |
-| `WithLabels()` | []string | none | Labels for each bar |
+| `WithData()` | []float64 | required | Data values to visualize (single series) |
+| `WithSeries()` | []Series | none | Multiple data series for grouped/stacked charts |
+| `WithLabels()` | []string | none | Labels for each bar/category |
 | `WithTitle()` | string | none | Chart title |
 | `WithDirection()` | Direction | Horizontal | Orientation (Horizontal/Vertical) |
 | `WithWidth()` | int | 80 | Chart width in columns |
 | `WithHeight()` | int | 24 | Chart height in rows (vertical mode) |
+| `WithBarMode()` | BarMode | BarModeGrouped | Display mode (Grouped/Stacked) |
 | `WithShowValues()` | bool | false | Display numeric values |
 | `WithShowAxes()` | bool | true | Display axes and labels |
+| `WithShowLegend()` | bool | false | Display legend for multi-series charts |
 | `WithStyle()` | RenderStyle | StyleAuto | ASCII, Unicode, or Auto |
 | `WithColor()` | bool | auto | Enable/disable colors |
 | `WithTheme()` | *Theme | DefaultTheme | Color theme |
@@ -247,6 +365,10 @@ termcharts bar 120 98 145 132 \
 | `--color` | `-c` | bool | false | Enable colored output |
 | `--no-color` | | bool | false | Disable colored output |
 | `--ascii` | | bool | false | Use ASCII characters only |
+| `--series` | | string | "" | JSON array of series for grouped/stacked charts |
+| `--grouped` | `-g` | bool | false | Display multiple series as grouped bars |
+| `--stacked` | `-s` | bool | false | Display multiple series as stacked bars |
+| `--legend` | | bool | false | Show legend for multi-series charts |
 
 ## Implementation Details
 
@@ -351,13 +473,12 @@ fmt.Println(chart.Render())
 
 The following features are planned for future releases:
 
-- **Grouped Bar Charts**: Display multiple series side-by-side
-- **Stacked Bar Charts**: Stack multiple series on top of each other
 - **Negative Value Support**: Properly handle and display negative values
 - **Horizontal Reference Lines**: Add grid lines or reference markers
 - **Custom Bar Characters**: Allow user-defined characters for bars
 - **Gradient Fills**: Use multiple characters to create gradient effects
 - **Logarithmic Scale**: Support for logarithmic scaling
+- **Data from URL**: Fetch data from REST APIs
 
 ## Testing
 

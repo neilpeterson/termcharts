@@ -131,20 +131,22 @@ Compact, inline charts that visualize data trends in a single line. Perfect for 
 ```go
 // Library
 fmt.Println(termcharts.Spark([]float64{1, 5, 2, 8, 3, 7, 4, 6}))
-// Output: ▁▅▂█▃▇▄▆
+// Output
+▁▅▂█▃▇▄▆
 ```
 
 ```bash
 # CLI
-termcharts spark 10 20 30 25 15 --color --width 50
-echo "1 5 2 8" | termcharts spark
+termcharts spark 1 5 2 8 3 7 4 6
+# Output
+▁▅▂█▃▇▄▆
 ```
 
 **[→ Full Sparkline Documentation](docs/sparkline.md)**
 
 ### Bar Charts ✓
 
-Horizontal and vertical bar charts for comparing values. Supports labels, titles, and value display.
+Horizontal and vertical bar charts for comparing values. Supports labels, titles, value display, and multi-series grouped/stacked charts.
 
 ```go
 // Library
@@ -163,6 +165,18 @@ Q1  ██████████████████████
 Q2  ███████████████████████████████████████████████████
 Q3  █████████████████████████████████
 Q4  █████████████████████████████████████████████████████████████████
+```
+
+**With values:**
+```bash
+termcharts bar 120 98 145 --labels "North,South,East" --show-values
+```
+
+Output:
+```
+North  ████████████████████████████████████████████████████████ 120.0
+South  ██████████████████████████████████████████████ 98.0
+East   ███████████████████████████████████████████████████████████████████ 145.0
 ```
 
 **Vertical bars:**
@@ -185,48 +199,21 @@ Output:
 Q1  Q2  Q3  Q4
 ```
 
-**With values:**
+**Grouped bar charts (multiple series side-by-side):**
 ```bash
-termcharts bar 120 98 145 --labels "North,South,East" --show-values
+# CLI - Grouped bar chart
+termcharts bar --series '[{"label":"2023","data":[10,20,30]},{"label":"2024","data":[15,25,35]}]' --grouped --labels "Q1,Q2,Q3" --legend --color
 ```
 
-Output:
-```
-North  ████████████████████████████████████████████████████████ 120.0
-South  ██████████████████████████████████████████████ 98.0
-East   ███████████████████████████████████████████████████████████████████ 145.0
-```
+![Grouped Bar Chart Example](docs/images/bar-chart-grouped.png)
+
+*Screenshot shows grouped bars with different colors for each series.*
 
 **[→ Full Bar Chart Documentation](docs/bar-chart.md)**
 
 ### Pie Charts ✓
 
 Pie charts display proportional data with color-coded segments and percentages.
-
-```go
-// Library
-pie := termcharts.NewPieChart(
-    termcharts.WithData([]float64{50, 30, 20}),
-    termcharts.WithLabels([]string{"Desktop", "Mobile", "Tablet"}),
-    termcharts.WithColor(true),
-)
-fmt.Println(pie.Render())
-```
-
-Output (without color):
-```
-        ◆◆◆◆●●●●●
-     ◆◆◆◆◆◆◆●●●●●●●●
-   ◆◆◆◆◆◆◆◆◆●●●●●●●●●●
-  ◆◆◆◆◆◆◆◆◆◆●●●●●●●●●●●
-  ○○○○◆◆◆◆◆◆●●●●●●●●●●●     ● Desktop   50.0%
- ○○○○○○○○○○○●●●●●●●●●●●●    ○ Mobile    30.0%
-  ○○○○○○○○○○○●●●●●●●●●●     ◆ Tablet    20.0%
-  ○○○○○○○○○○○●●●●●●●●●●
-   ○○○○○○○○○○●●●●●●●●●
-     ○○○○○○○○●●●●●●●
-        ○○○○○●●●●
-```
 
 ```bash
 # CLI
@@ -267,13 +254,19 @@ Sales Trend
 
 ```bash
 # CLI - Standard ASCII/Unicode mode
-termcharts line 1 5 2 8 3 7 --color --title "Sales Trend"
+termcharts line 1 5 2 8 3 7 --title "Sales Trend"
+```
 
-# High-resolution Braille mode
-termcharts line 1 5 2 8 3 7 --braille --color
-
-# With labels
-termcharts line 150 230 180 290 --labels "Q1,Q2,Q3,Q4" --title "Quarterly Revenue"
+Output:
+```
+Sales Trend
+   8.0 ┤     ╭╮
+   6.3 ┤    ╭╯╰╮  ╭╮
+   4.7 ┤   ╭╯  ╰──╯╰╮
+   3.0 ┤  ╭╯        ╰
+   1.3 ┤ ╭╯
+   1.0 ┼─╯
+       └──────────────
 ```
 
 **[→ Full Line Chart Documentation](docs/line-chart.md)**
@@ -284,43 +277,6 @@ termcharts line 150 230 180 290 --labels "Q1,Q2,Q3,Q4" --title "Quarterly Revenu
 - **Scatter Plots** - XY coordinate plotting
 - **Gauges** - Progress bars and percentage indicators
 
-## Roadmap
-
-### v0.1.0 - Core Library + Sparklines ✓
-- [x] Project scaffolding and build system
-- [x] Core types and interfaces
-- [x] Terminal utilities (size, color, Unicode detection)
-- [x] Sparkline implementation with comprehensive tests (95% coverage)
-- [x] Sparkline CLI command (`termcharts spark`)
-- [x] Unit tests for all core components (95% coverage)
-- [x] GitHub Actions CI/CD (multi-platform, multi-version testing)
-- [x] Complete API documentation
-
-### v0.2.0 - Bar Charts ✓
-- [x] Horizontal bar charts
-- [x] Vertical bar charts
-- [x] Labels and axis rendering
-- [x] Value display option
-- [x] CLI `bar` subcommand
-- [x] Comprehensive tests and documentation
-- [ ] Grouped/stacked variants (deferred to v0.5.0)
-
-### v0.3.0 - Pie Charts ✓
-- [x] Pie chart with Unicode/ASCII modes
-- [x] Percentage and value display
-- [x] Legend and color coding
-- [x] CLI `pie` subcommand
-- [x] Comprehensive tests and documentation
-
-### v0.4.0 - Line Charts ✓
-- [x] ASCII line charts with box-drawing characters
-- [x] Braille high-resolution charts
-- [x] Multi-series support with legend
-- [x] CLI `line` subcommand
-- [x] Comprehensive tests and documentation
-
-See [docs/status.md](docs/status.md) for detailed status and milestones.
-
 ## Documentation
 
 - **[API Reference](docs/api-reference.md)** - Complete API documentation with all options and examples
@@ -329,32 +285,8 @@ See [docs/status.md](docs/status.md) for detailed status and milestones.
 - **[Pie Chart Guide](docs/pie-chart.md)** - Complete pie chart documentation with examples, API reference, and CLI usage
 - **[Line Chart Guide](docs/line-chart.md)** - Complete line chart documentation with ASCII, Unicode, and Braille modes
 - **[Project Status](docs/status.md)** - Current development status and roadmap
+- **[Contributing Guide](docs/CONTRIBUTING.md)** - Guidelines for contributors
 - **[GoDoc](https://pkg.go.dev/github.com/neilpeterson/termcharts)** - Generated API documentation (coming soon)
-
-## Development
-
-```bash
-# Run tests
-make test
-
-# Run tests with coverage
-make cover
-
-# Run linter
-make lint
-
-# Build binary
-make build
-
-# Install to $GOPATH/bin
-make install
-
-# Cross-compile for all platforms
-make release
-
-# Clean build artifacts
-make clean
-```
 
 ## Design Principles
 
@@ -369,32 +301,13 @@ make clean
 - Go 1.21 or higher
 - Terminal with Unicode support (recommended, ASCII fallback available)
 
-## Testing
-
-termcharts has comprehensive test coverage (95%+):
-
-```bash
-# Run all tests
-go test ./...
-
-# Run with coverage
-go test -cover ./...
-
-# Run with race detector
-go test -race ./...
-```
-
-The project uses GitHub Actions for CI/CD with automated testing across:
-- Multiple platforms: Linux, macOS, Windows
-- Multiple Go versions: 1.21, 1.22, 1.23
-
 ## License
 
 MIT License - See LICENSE file for details
 
 ## Contributing
 
-Contributions welcome! Please see CONTRIBUTING.md for guidelines.
+Contributions welcome! Please see [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
 
 ## Inspiration
 

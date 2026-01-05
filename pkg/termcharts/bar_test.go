@@ -482,3 +482,308 @@ func TestBarMode_String(t *testing.T) {
 		})
 	}
 }
+
+func TestBarGrouped_ConvenienceFunction(t *testing.T) {
+	series := []Series{
+		{Label: "2023", Data: []float64{10, 20, 15}},
+		{Label: "2024", Data: []float64{12, 25, 18}},
+	}
+	result := BarGrouped(series)
+
+	if result == "" {
+		t.Error("BarGrouped() returned empty string")
+	}
+
+	// Should have lines for each category
+	lines := strings.Split(strings.TrimSpace(result), "\n")
+	if len(lines) < 3 {
+		t.Errorf("Expected at least 3 lines for grouped bar chart, got %d", len(lines))
+	}
+}
+
+func TestBarStacked_ConvenienceFunction(t *testing.T) {
+	series := []Series{
+		{Label: "Product A", Data: []float64{10, 20, 15}},
+		{Label: "Product B", Data: []float64{5, 10, 8}},
+	}
+	result := BarStacked(series)
+
+	if result == "" {
+		t.Error("BarStacked() returned empty string")
+	}
+
+	// Should have lines for each category
+	lines := strings.Split(strings.TrimSpace(result), "\n")
+	if len(lines) < 3 {
+		t.Errorf("Expected at least 3 lines for stacked bar chart, got %d", len(lines))
+	}
+}
+
+func TestBarChart_Render_GroupedHorizontal(t *testing.T) {
+	series := []Series{
+		{Label: "2023", Data: []float64{10, 20, 30}},
+		{Label: "2024", Data: []float64{15, 25, 35}},
+	}
+	labels := []string{"Q1", "Q2", "Q3"}
+
+	bar := NewBarChart(
+		WithSeries(series),
+		WithLabels(labels),
+		WithBarMode(BarModeGrouped),
+		WithStyle(StyleASCII),
+	)
+	result := bar.Render()
+
+	if result == "" {
+		t.Error("Render returned empty string for grouped horizontal bar chart")
+	}
+
+	// Should contain labels
+	for _, label := range labels {
+		if !strings.Contains(result, label) {
+			t.Errorf("Expected output to contain label %s", label)
+		}
+	}
+
+	// Should have one line per category
+	lines := strings.Split(strings.TrimSpace(result), "\n")
+	if len(lines) != len(labels) {
+		t.Errorf("Expected %d lines, got %d", len(labels), len(lines))
+	}
+}
+
+func TestBarChart_Render_StackedHorizontal(t *testing.T) {
+	series := []Series{
+		{Label: "Product A", Data: []float64{10, 20, 30}},
+		{Label: "Product B", Data: []float64{5, 10, 15}},
+	}
+	labels := []string{"Q1", "Q2", "Q3"}
+
+	bar := NewBarChart(
+		WithSeries(series),
+		WithLabels(labels),
+		WithBarMode(BarModeStacked),
+		WithStyle(StyleASCII),
+	)
+	result := bar.Render()
+
+	if result == "" {
+		t.Error("Render returned empty string for stacked horizontal bar chart")
+	}
+
+	// Should contain labels
+	for _, label := range labels {
+		if !strings.Contains(result, label) {
+			t.Errorf("Expected output to contain label %s", label)
+		}
+	}
+}
+
+func TestBarChart_Render_GroupedVertical(t *testing.T) {
+	series := []Series{
+		{Label: "2023", Data: []float64{10, 20, 30}},
+		{Label: "2024", Data: []float64{15, 25, 35}},
+	}
+	labels := []string{"Q1", "Q2", "Q3"}
+
+	bar := NewBarChart(
+		WithSeries(series),
+		WithLabels(labels),
+		WithBarMode(BarModeGrouped),
+		WithDirection(Vertical),
+		WithHeight(15),
+		WithStyle(StyleASCII),
+	)
+	result := bar.Render()
+
+	if result == "" {
+		t.Error("Render returned empty string for grouped vertical bar chart")
+	}
+
+	// Should have multiple lines (height of chart)
+	lines := strings.Split(strings.TrimSpace(result), "\n")
+	if len(lines) < 5 {
+		t.Error("Expected multiple lines for vertical grouped bar chart")
+	}
+
+	// Should contain labels
+	for _, label := range labels {
+		if !strings.Contains(result, label) {
+			t.Errorf("Expected output to contain label %s", label)
+		}
+	}
+}
+
+func TestBarChart_Render_StackedVertical(t *testing.T) {
+	series := []Series{
+		{Label: "Product A", Data: []float64{10, 20, 30}},
+		{Label: "Product B", Data: []float64{5, 10, 15}},
+	}
+	labels := []string{"Q1", "Q2", "Q3"}
+
+	bar := NewBarChart(
+		WithSeries(series),
+		WithLabels(labels),
+		WithBarMode(BarModeStacked),
+		WithDirection(Vertical),
+		WithHeight(15),
+		WithStyle(StyleASCII),
+	)
+	result := bar.Render()
+
+	if result == "" {
+		t.Error("Render returned empty string for stacked vertical bar chart")
+	}
+
+	// Should have multiple lines (height of chart)
+	lines := strings.Split(strings.TrimSpace(result), "\n")
+	if len(lines) < 5 {
+		t.Error("Expected multiple lines for vertical stacked bar chart")
+	}
+}
+
+func TestBarChart_Render_MultiSeriesWithLegend(t *testing.T) {
+	series := []Series{
+		{Label: "2023", Data: []float64{10, 20, 30}},
+		{Label: "2024", Data: []float64{15, 25, 35}},
+	}
+
+	bar := NewBarChart(
+		WithSeries(series),
+		WithShowLegend(true),
+		WithStyle(StyleASCII),
+	)
+	result := bar.Render()
+
+	// Should contain series labels in legend
+	for _, s := range series {
+		if !strings.Contains(result, s.Label) {
+			t.Errorf("Expected legend to contain series label %s", s.Label)
+		}
+	}
+}
+
+func TestBarChart_Render_MultiSeriesWithColor(t *testing.T) {
+	series := []Series{
+		{Label: "2023", Data: []float64{10, 20, 30}},
+		{Label: "2024", Data: []float64{15, 25, 35}},
+	}
+
+	bar := NewBarChart(
+		WithSeries(series),
+		WithColor(true),
+		WithStyle(StyleUnicode),
+	)
+	result := bar.Render()
+
+	// Should contain ANSI color codes
+	if !strings.Contains(result, "\033[") {
+		t.Error("Expected ANSI color codes in output for multi-series with color")
+	}
+}
+
+func TestBarChart_Render_MultiSeriesWithTitle(t *testing.T) {
+	series := []Series{
+		{Label: "2023", Data: []float64{10, 20, 30}},
+		{Label: "2024", Data: []float64{15, 25, 35}},
+	}
+	title := "Sales Comparison"
+
+	bar := NewBarChart(
+		WithSeries(series),
+		WithTitle(title),
+	)
+	result := bar.Render()
+
+	// Should contain title on first line
+	lines := strings.Split(result, "\n")
+	if !strings.Contains(lines[0], title) {
+		t.Error("Expected title to be on first line")
+	}
+}
+
+func TestBarChart_Render_MultiSeriesEmptyData(t *testing.T) {
+	series := []Series{
+		{Label: "Empty", Data: []float64{}},
+	}
+
+	bar := NewBarChart(WithSeries(series))
+	result := bar.Render()
+
+	// Should handle empty series gracefully
+	if result == "" {
+		// Empty series data results in empty output - this is expected
+		t.Log("Empty series data resulted in empty output (expected)")
+	}
+}
+
+func TestBarChart_Render_MultiSeriesInvalidData(t *testing.T) {
+	series := []Series{
+		{Label: "Invalid", Data: []float64{10, math.NaN(), 30}},
+	}
+
+	bar := NewBarChart(WithSeries(series))
+	result := bar.Render()
+
+	// Should return empty string for invalid data
+	if result != "" {
+		t.Error("Expected empty string for series with invalid data")
+	}
+}
+
+func TestBarChart_Render_MultiSeriesCustomColors(t *testing.T) {
+	series := []Series{
+		{Label: "Red", Data: []float64{10, 20, 30}, Color: "red"},
+		{Label: "Green", Data: []float64{15, 25, 35}, Color: "green"},
+	}
+
+	bar := NewBarChart(
+		WithSeries(series),
+		WithColor(true),
+		WithStyle(StyleUnicode),
+	)
+	result := bar.Render()
+
+	// Should contain ANSI color codes for red and green
+	if !strings.Contains(result, "\033[31m") && !strings.Contains(result, "\033[32m") {
+		t.Error("Expected custom color codes in output")
+	}
+}
+
+func TestCalculateMaxValue_Stacked(t *testing.T) {
+	series := []Series{
+		{Label: "A", Data: []float64{10, 20, 30}},
+		{Label: "B", Data: []float64{5, 10, 15}},
+	}
+
+	bar := NewBarChart(
+		WithSeries(series),
+		WithBarMode(BarModeStacked),
+	)
+
+	maxVal := bar.calculateMaxValue(series)
+	// Max stacked value should be 30+15=45
+	expected := 45.0
+	if maxVal != expected {
+		t.Errorf("Expected max stacked value %f, got %f", expected, maxVal)
+	}
+}
+
+func TestCalculateMaxValue_Grouped(t *testing.T) {
+	series := []Series{
+		{Label: "A", Data: []float64{10, 20, 30}},
+		{Label: "B", Data: []float64{5, 10, 15}},
+	}
+
+	bar := NewBarChart(
+		WithSeries(series),
+		WithBarMode(BarModeGrouped),
+	)
+
+	maxVal := bar.calculateMaxValue(series)
+	// Max individual value should be 30
+	expected := 30.0
+	if maxVal != expected {
+		t.Errorf("Expected max grouped value %f, got %f", expected, maxVal)
+	}
+}

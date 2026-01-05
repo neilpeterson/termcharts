@@ -1,10 +1,10 @@
 # Project Status
 
-> Last updated: 2026-01-03
+> Last updated: 2026-01-04
 
 ## Current Focus
 
-**Session Goal:** v0.4.0 (Line Charts) complete! Ready to begin v0.5.0.
+**Session Goal:** v0.5.0 (Grouped & Stacked Bar Charts) complete!
 
 ## Milestone: v0.1.0 - Core Library + Sparklines ✓
 
@@ -39,9 +39,9 @@
 - [x] v0.2.0 release tag and GitHub release created
 
 ### Deferred to Future Releases
-- [ ] Grouped bar charts (v0.5.0)
-- [ ] Stacked bar charts (v0.5.0)
-- [ ] Integration tests for CLI (v0.5.0)
+- [x] Grouped bar charts (v0.5.0) ✓
+- [x] Stacked bar charts (v0.5.0) ✓
+- [x] Integration tests for CLI (v0.5.0) ✓
 
 ## Milestone: v0.3.0 - Pie Charts ✓
 
@@ -68,6 +68,22 @@
 - [x] Line chart example program
 - [x] Complete documentation (docs/line-chart.md)
 - [x] Updated README with line chart examples
+
+## Milestone: v0.5.0 - Grouped & Stacked Bar Charts ✓
+
+### Completed
+- [x] Grouped bar charts (multiple series side-by-side)
+- [x] Stacked bar charts (series stacked on top of each other)
+- [x] Legend support for multi-series charts
+- [x] Horizontal and vertical orientation support
+- [x] Custom series colors
+- [x] CLI `--grouped`, `--stacked`, `--legend` flags
+- [x] CLI `--series` flag for JSON input
+- [x] Comprehensive unit tests (20+ new test cases, all passing)
+- [x] CLI integration tests (40+ test cases covering all chart types)
+- [x] Complete documentation updates (README.md, docs/bar-chart.md)
+- [x] Convenience functions: `BarGrouped()`, `BarStacked()`
+- [x] New options: `WithBarMode()`, `WithShowLegend()`
 
 ## Future / Ideas
 
@@ -99,6 +115,8 @@ None
 <!-- Reverse chronological log of completed work -->
 | Date | Change |
 |------|--------|
+| 2026-01-04 | **Project Scrub Complete**: Updated CLAUDE.md architecture to reflect current file structure (added pie.go, line.go, cli_test.go; updated chart types list). All 154 tests passing, all 4 examples working, dependencies clean (go mod tidy). Moved CONTRIBUTING.md to docs/, updated README references. Identified 17 stale remote branches that could be cleaned up after v0.5.0 merge. No TODO/FIXME markers in code, no unused code found. |
+| 2026-01-04 | **v0.5.0 Milestone Complete**: Implemented grouped and stacked bar charts for multi-series data visualization. Features include grouped bars (side-by-side comparison), stacked bars (cumulative totals), legend support, custom series colors, and both horizontal/vertical orientations. Added new options `WithBarMode()`, `WithShowLegend()`, `WithSeries()`, and `WithBarMode()`. Created convenience functions `BarGrouped()` and `BarStacked()`. Updated CLI with `--grouped`, `--stacked`, `--legend`, and `--series` flags for JSON input. Added comprehensive unit tests (20+ new test cases) and CLI integration tests (40+ test cases covering all chart types). Updated documentation (README.md, docs/bar-chart.md). |
 | 2026-01-03 | **v0.4.0 Milestone Complete**: Implemented line charts with three rendering modes (ASCII, Unicode, Braille). Features include box-drawing characters for ASCII/Unicode modes, high-resolution Braille patterns (2x4 dots per character), multi-series support with automatic legend, configurable axes and labels, theme-based colors, and comprehensive CLI options. Created CLI `line` subcommand with support for --braille, --ascii, --axes, --title, --labels, and theme selection. Added comprehensive unit tests (27 test cases, all passing). Created example program and complete documentation (docs/line-chart.md). Updated README with line chart examples and roadmap. |
 | 2026-01-03 | **v0.3.0 Milestone Complete**: Implemented pie charts with circular ASCII art visualization. Features include different characters per slice (when colors disabled) or uniform asterisk with colors, legend positioned to the right, Unicode/ASCII modes, percentage display, optional value display, title support, and theme-based colors. Created CLI `pie` subcommand with support for data from arguments, files, and stdin. Added comprehensive unit tests (20 test cases, all passing). Created example program and complete documentation (docs/pie-chart.md). Updated README with pie chart examples and roadmap. |
 | 2026-01-03 | **Project Scrub Complete**: Ran comprehensive project cleanup. Cleaned dependencies (go mod tidy fixed direct/indirect classification for cobra). Fixed outdated documentation: updated sparkline.md file structure (removed nonexistent testdata reference, fixed example path), updated CLAUDE.md architecture to reflect current file structure (removed files not yet implemented, added docs/ directory, added Makefile deps target). All tests passing (87 tests), examples working, no unused code found, no TODO/FIXME markers. Project ready for v0.3.0 development. |

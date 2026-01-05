@@ -60,10 +60,12 @@ termcharts/
 │   └── termcharts/           # Public library package
 │       ├── chart.go          # Base Chart interface and common types
 │       ├── options.go        # Functional options pattern
-│       ├── bar.go            # Horizontal/vertical bar charts
+│       ├── bar.go            # Horizontal/vertical bar charts (grouped/stacked)
 │       ├── sparkline.go      # Inline sparklines
+│       ├── pie.go            # Pie charts with legend
+│       ├── line.go           # Line charts (ASCII/Unicode/Braille)
 │       └── style.go          # Colors, themes, rendering modes
-│       # Future: line.go, scatter.go, heatmap.go, gauge.go
+│       # Future: scatter.go, heatmap.go, gauge.go
 ├── internal/                 # Internal utilities (not part of public API)
 │   ├── terminal.go           # Terminal size detection
 │   └── scale.go              # Data scaling/normalization
@@ -72,11 +74,15 @@ termcharts/
 │       ├── main.go           # Entry point
 │       ├── root.go           # Root command
 │       ├── bar.go            # `termcharts bar` subcommand
-│       └── spark.go          # `termcharts spark` subcommand
-│       # Future: line.go, sources.go
+│       ├── spark.go          # `termcharts spark` subcommand
+│       ├── pie.go            # `termcharts pie` subcommand
+│       ├── line.go           # `termcharts line` subcommand
+│       └── cli_test.go       # CLI integration tests
 ├── examples/
 │   ├── bar-chart/            # Bar chart demo
-│   └── sparkline/            # Sparkline demo
+│   ├── sparkline/            # Sparkline demo
+│   ├── pie-chart/            # Pie chart demo
+│   └── line-chart/           # Line chart demo
 ├── docs/                     # Documentation
 ├── go.mod
 ├── go.sum
@@ -93,15 +99,18 @@ termcharts/
 - **Responsive**: Auto-detect terminal width, scale accordingly
 - **Zero allocation hot paths**: Efficient rendering for real-time updates
 
-## Chart Types (Priority Order)
+## Chart Types
 
-1. Horizontal bar chart
+**Implemented:**
+1. Bar charts (horizontal, vertical, grouped, stacked)
 2. Sparklines
-3. Line chart (ASCII curves, then Braille high-res)
-4. Vertical bar chart
-5. Progress bars / gauges
-6. Heatmap
-7. Scatter plot
+3. Pie charts
+4. Line charts (ASCII, Unicode, Braille high-res)
+
+**Future:**
+5. Heatmap
+6. Scatter plot
+7. Progress bars / gauges
 
 ## Key Unicode Characters
 

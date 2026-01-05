@@ -66,6 +66,14 @@ func (b *BarChart) Render() string {
 		return ""
 	}
 
+	// If multi-series, render grouped or stacked
+	if len(b.opts.Series) > 0 {
+		if b.opts.Direction == Horizontal {
+			return b.renderHorizontalMultiSeries()
+		}
+		return b.renderVerticalMultiSeries()
+	}
+
 	// Render based on direction
 	if b.opts.Direction == Horizontal {
 		return b.renderHorizontal()
@@ -405,4 +413,494 @@ func BarVertical(data []float64) string {
 		WithDirection(Vertical),
 	)
 	return bar.Render()
+}
+
+// BarGrouped is a convenience function that creates a grouped bar chart.
+//
+// Example:
+//
+//	fmt.Println(termcharts.BarGrouped([]termcharts.Series{
+//	    {Label: "2023", Data: []float64{10, 20, 15}},
+//	    {Label: "2024", Data: []float64{12, 25, 18}},
+//	}))
+func BarGrouped(series []Series) string {
+	bar := NewBarChart(
+		WithSeries(series),
+		WithBarMode(BarModeGrouped),
+	)
+	return bar.Render()
+}
+
+// BarStacked is a convenience function that creates a stacked bar chart.
+//
+// Example:
+//
+//	fmt.Println(termcharts.BarStacked([]termcharts.Series{
+//	    {Label: "Product A", Data: []float64{10, 20, 15}},
+//	    {Label: "Product B", Data: []float64{5, 10, 8}},
+//	}))
+func BarStacked(series []Series) string {
+	bar := NewBarChart(
+		WithSeries(series),
+		WithBarMode(BarModeStacked),
+	)
+	return bar.Render()
+}
+
+// renderHorizontalMultiSeries renders a horizontal bar chart with multiple series.
+//
+//nolint:gocyclo // Complex by nature; splitting would harm readability
+func (b *BarChart) renderHorizontalMultiSeries() string {
+	series := b.opts.Series
+	labels := b.opts.Labels
+
+	// Validate all series data
+	for _, s := range series {
+		if !internal.AllValid(s.Data) {
+			return ""
+		}
+	}
+
+	// Determine character set and color settings
+	useUnicode := b.shouldUseUnicode()
+	colorEnabled := b.isColorEnabled()
+	theme := b.opts.Theme
+	if theme == nil {
+		theme = DefaultTheme
+	}
+
+	// Find the number of categories (max data points across series)
+	numCategories := 0
+	for _, s := range series {
+		if len(s.Data) > numCategories {
+			numCategories = len(s.Data)
+		}
+	}
+
+	// Calculate max value based on bar mode
+	maxVal := b.calculateMaxValue(series)
+	if maxVal == 0 {
+		maxVal = 1
+	}
+
+	// Calculate label width
+	maxLabelWidth := 0
+	if b.opts.ShowAxes && len(labels) > 0 {
+		maxLabelWidth = maxStringLength(labels) + 1
+	}
+
+	// Calculate bar width
+	barWidth := b.opts.Width - maxLabelWidth - 2
+	if barWidth < 1 {
+		barWidth = 20
+	}
+
+	var result strings.Builder
+
+	// Render title
+	if b.opts.Title != "" {
+		titleText := b.opts.Title
+		if colorEnabled {
+			titleText = Colorize(titleText, theme.Text, true)
+		}
+		result.WriteString(titleText)
+		result.WriteString("\n")
+	}
+
+	// Render based on mode
+	if b.opts.BarMode == BarModeStacked {
+		b.renderHorizontalStacked(&result, series, labels, numCategories, maxVal, barWidth, maxLabelWidth, useUnicode, colorEnabled, theme)
+	} else {
+		b.renderHorizontalGrouped(&result, series, labels, numCategories, maxVal, barWidth, maxLabelWidth, useUnicode, colorEnabled, theme)
+	}
+
+	// Render legend if enabled
+	if b.opts.ShowLegend {
+		result.WriteString("\n")
+		for i, s := range series {
+			color := theme.GetSeriesColor(i)
+			if s.Color != "" {
+				color = s.Color
+			}
+			legendChar := "█"
+			if !useUnicode {
+				legendChar = "#"
+			}
+			if colorEnabled {
+				legendChar = Colorize(legendChar, color, true)
+			}
+			result.WriteString(fmt.Sprintf("%s %s  ", legendChar, s.Label))
+		}
+		result.WriteString("\n")
+	}
+
+	return result.String()
+}
+
+// renderHorizontalGrouped renders horizontal grouped bars.
+func (b *BarChart) renderHorizontalGrouped(result *strings.Builder, series []Series, labels []string, numCategories int, maxVal float64, barWidth, maxLabelWidth int, useUnicode, colorEnabled bool, theme *Theme) {
+	for cat := 0; cat < numCategories; cat++ {
+		// Render label for this category
+		if b.opts.ShowAxes {
+			label := ""
+			if cat < len(labels) {
+				label = labels[cat]
+			}
+			labelText := fmt.Sprintf("%-*s ", maxLabelWidth, label)
+			if colorEnabled {
+				labelText = Colorize(labelText, theme.Muted, true)
+			}
+			result.WriteString(labelText)
+		}
+
+		// Render bars for each series side by side
+		for i, s := range series {
+			val := 0.0
+			if cat < len(s.Data) {
+				val = s.Data[cat]
+			}
+
+			barLen := int(float64(barWidth/len(series)) * (val / maxVal))
+			if barLen < 0 {
+				barLen = 0
+			}
+
+			color := theme.GetSeriesColor(i)
+			if s.Color != "" {
+				color = s.Color
+			}
+
+			bar := b.renderBar(barLen, barWidth/len(series), useUnicode, colorEnabled, color)
+			result.WriteString(bar)
+		}
+		result.WriteString("\n")
+	}
+}
+
+// renderHorizontalStacked renders horizontal stacked bars.
+func (b *BarChart) renderHorizontalStacked(result *strings.Builder, series []Series, labels []string, numCategories int, maxVal float64, barWidth, maxLabelWidth int, useUnicode, colorEnabled bool, theme *Theme) {
+	for cat := 0; cat < numCategories; cat++ {
+		// Render label for this category
+		if b.opts.ShowAxes {
+			label := ""
+			if cat < len(labels) {
+				label = labels[cat]
+			}
+			labelText := fmt.Sprintf("%-*s ", maxLabelWidth, label)
+			if colorEnabled {
+				labelText = Colorize(labelText, theme.Muted, true)
+			}
+			result.WriteString(labelText)
+		}
+
+		// Render stacked bars (each series stacked horizontally)
+		for i, s := range series {
+			val := 0.0
+			if cat < len(s.Data) {
+				val = s.Data[cat]
+			}
+
+			barLen := int(float64(barWidth) * (val / maxVal))
+			if barLen < 0 {
+				barLen = 0
+			}
+
+			color := theme.GetSeriesColor(i)
+			if s.Color != "" {
+				color = s.Color
+			}
+
+			bar := b.renderBar(barLen, barWidth, useUnicode, colorEnabled, color)
+			result.WriteString(bar)
+		}
+		result.WriteString("\n")
+	}
+}
+
+// renderVerticalMultiSeries renders a vertical bar chart with multiple series.
+//
+//nolint:gocyclo // Complex by nature; splitting would harm readability
+func (b *BarChart) renderVerticalMultiSeries() string {
+	series := b.opts.Series
+	labels := b.opts.Labels
+
+	// Validate all series data
+	for _, s := range series {
+		if !internal.AllValid(s.Data) {
+			return ""
+		}
+	}
+
+	// Determine character set and color settings
+	useUnicode := b.shouldUseUnicode()
+	colorEnabled := b.isColorEnabled()
+	theme := b.opts.Theme
+	if theme == nil {
+		theme = DefaultTheme
+	}
+
+	// Find the number of categories
+	numCategories := 0
+	for _, s := range series {
+		if len(s.Data) > numCategories {
+			numCategories = len(s.Data)
+		}
+	}
+
+	// Calculate max value based on bar mode
+	maxVal := b.calculateMaxValue(series)
+	if maxVal == 0 {
+		maxVal = 1
+	}
+
+	// Calculate bar height
+	barHeight := b.opts.Height
+	if b.opts.Title != "" {
+		barHeight--
+	}
+	if b.opts.ShowAxes && len(labels) > 0 {
+		barHeight--
+	}
+	if b.opts.ShowLegend {
+		barHeight -= 2
+	}
+	if barHeight < 3 {
+		barHeight = 10
+	}
+
+	var result strings.Builder
+
+	// Render title
+	if b.opts.Title != "" {
+		titleText := b.opts.Title
+		if colorEnabled {
+			titleText = Colorize(titleText, theme.Text, true)
+		}
+		result.WriteString(titleText)
+		result.WriteString("\n")
+	}
+
+	// Render based on mode
+	if b.opts.BarMode == BarModeStacked {
+		b.renderVerticalStacked(&result, series, labels, numCategories, maxVal, barHeight, useUnicode, colorEnabled, theme)
+	} else {
+		b.renderVerticalGrouped(&result, series, labels, numCategories, maxVal, barHeight, useUnicode, colorEnabled, theme)
+	}
+
+	// Render legend if enabled
+	if b.opts.ShowLegend {
+		result.WriteString("\n")
+		for i, s := range series {
+			color := theme.GetSeriesColor(i)
+			if s.Color != "" {
+				color = s.Color
+			}
+			legendChar := "█"
+			if !useUnicode {
+				legendChar = "#"
+			}
+			if colorEnabled {
+				legendChar = Colorize(legendChar, color, true)
+			}
+			result.WriteString(fmt.Sprintf("%s %s  ", legendChar, s.Label))
+		}
+		result.WriteString("\n")
+	}
+
+	return result.String()
+}
+
+// renderVerticalGrouped renders vertical grouped bars.
+func (b *BarChart) renderVerticalGrouped(result *strings.Builder, series []Series, labels []string, numCategories int, maxVal float64, barHeight int, useUnicode, colorEnabled bool, theme *Theme) {
+	barWidth := 3                  // Width of each bar
+	groupSpacing := 2              // Space between groups
+	barSpacing := 0                // Space between bars in a group
+	groupWidth := len(series)*barWidth + (len(series)-1)*barSpacing
+
+	// Render bars from top to bottom
+	for row := barHeight; row > 0; row-- {
+		for cat := 0; cat < numCategories; cat++ {
+			for i, s := range series {
+				val := 0.0
+				if cat < len(s.Data) {
+					val = s.Data[cat]
+				}
+
+				barRows := int(float64(barHeight) * (val / maxVal))
+				color := theme.GetSeriesColor(i)
+				if s.Color != "" {
+					color = s.Color
+				}
+
+				if row <= barRows {
+					char := b.renderVerticalBar(useUnicode, colorEnabled, color)
+					result.WriteString(strings.Repeat(char, barWidth))
+				} else {
+					result.WriteString(strings.Repeat(" ", barWidth))
+				}
+
+				// Add spacing between bars in group
+				if i < len(series)-1 {
+					result.WriteString(strings.Repeat(" ", barSpacing))
+				}
+			}
+
+			// Add spacing between groups
+			if cat < numCategories-1 {
+				result.WriteString(strings.Repeat(" ", groupSpacing))
+			}
+		}
+		result.WriteString("\n")
+	}
+
+	// Render labels
+	if b.opts.ShowAxes && len(labels) > 0 {
+		for cat := 0; cat < numCategories; cat++ {
+			label := ""
+			if cat < len(labels) {
+				label = labels[cat]
+				if len(label) > groupWidth {
+					label = label[:groupWidth]
+				} else {
+					label = fmt.Sprintf("%-*s", groupWidth, label)
+				}
+			} else {
+				label = strings.Repeat(" ", groupWidth)
+			}
+
+			labelText := label
+			if colorEnabled {
+				labelText = Colorize(labelText, theme.Muted, true)
+			}
+			result.WriteString(labelText)
+
+			if cat < numCategories-1 {
+				result.WriteString(strings.Repeat(" ", groupSpacing))
+			}
+		}
+		result.WriteString("\n")
+	}
+}
+
+// renderVerticalStacked renders vertical stacked bars.
+func (b *BarChart) renderVerticalStacked(result *strings.Builder, series []Series, labels []string, numCategories int, maxVal float64, barHeight int, useUnicode, colorEnabled bool, theme *Theme) {
+	barWidth := 3  // Width of each bar
+	spacing := 1   // Space between bars
+
+	// Pre-calculate the stacked heights for each category
+	stackedHeights := make([][]int, numCategories)
+	for cat := 0; cat < numCategories; cat++ {
+		stackedHeights[cat] = make([]int, len(series))
+		cumulative := 0.0
+		for i, s := range series {
+			val := 0.0
+			if cat < len(s.Data) {
+				val = s.Data[cat]
+			}
+			cumulative += val
+			stackedHeights[cat][i] = int(float64(barHeight) * (cumulative / maxVal))
+		}
+	}
+
+	// Render bars from top to bottom
+	for row := barHeight; row > 0; row-- {
+		for cat := 0; cat < numCategories; cat++ {
+			// Find which series this row belongs to (from top to bottom)
+			seriesIdx := -1
+			for i := len(series) - 1; i >= 0; i-- {
+				if row <= stackedHeights[cat][i] {
+					prevHeight := 0
+					if i > 0 {
+						prevHeight = stackedHeights[cat][i-1]
+					}
+					if row > prevHeight {
+						seriesIdx = i
+						break
+					}
+				}
+			}
+
+			if seriesIdx >= 0 {
+				color := theme.GetSeriesColor(seriesIdx)
+				if series[seriesIdx].Color != "" {
+					color = series[seriesIdx].Color
+				}
+				char := b.renderVerticalBar(useUnicode, colorEnabled, color)
+				result.WriteString(strings.Repeat(char, barWidth))
+			} else {
+				result.WriteString(strings.Repeat(" ", barWidth))
+			}
+
+			if cat < numCategories-1 {
+				result.WriteString(strings.Repeat(" ", spacing))
+			}
+		}
+		result.WriteString("\n")
+	}
+
+	// Render labels
+	if b.opts.ShowAxes && len(labels) > 0 {
+		for cat := 0; cat < numCategories; cat++ {
+			label := ""
+			if cat < len(labels) {
+				label = labels[cat]
+				if len(label) > barWidth {
+					label = label[:barWidth]
+				} else {
+					label = fmt.Sprintf("%-*s", barWidth, label)
+				}
+			} else {
+				label = strings.Repeat(" ", barWidth)
+			}
+
+			labelText := label
+			if colorEnabled {
+				labelText = Colorize(labelText, theme.Muted, true)
+			}
+			result.WriteString(labelText)
+
+			if cat < numCategories-1 {
+				result.WriteString(strings.Repeat(" ", spacing))
+			}
+		}
+		result.WriteString("\n")
+	}
+}
+
+// calculateMaxValue calculates the maximum value based on bar mode.
+func (b *BarChart) calculateMaxValue(series []Series) float64 {
+	if b.opts.BarMode == BarModeStacked {
+		// For stacked, find max sum across categories
+		numCategories := 0
+		for _, s := range series {
+			if len(s.Data) > numCategories {
+				numCategories = len(s.Data)
+			}
+		}
+
+		maxSum := 0.0
+		for cat := 0; cat < numCategories; cat++ {
+			sum := 0.0
+			for _, s := range series {
+				if cat < len(s.Data) {
+					sum += s.Data[cat]
+				}
+			}
+			if sum > maxSum {
+				maxSum = sum
+			}
+		}
+		return maxSum
+	}
+
+	// For grouped, find max individual value
+	maxVal := 0.0
+	for _, s := range series {
+		for _, v := range s.Data {
+			if !math.IsNaN(v) && !math.IsInf(v, 0) && v > maxVal {
+				maxVal = v
+			}
+		}
+	}
+	return maxVal
 }
