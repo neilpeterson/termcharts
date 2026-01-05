@@ -131,20 +131,14 @@ Compact, inline charts that visualize data trends in a single line. Perfect for 
 ```go
 // Library
 fmt.Println(termcharts.Spark([]float64{1, 5, 2, 8, 3, 7, 4, 6}))
-```
-
-Output:
-```
+// Output
 ▁▅▂█▃▇▄▆
 ```
 
 ```bash
 # CLI
 termcharts spark 1 5 2 8 3 7 4 6
-```
-
-Output:
-```
+# Output
 ▁▅▂█▃▇▄▆
 ```
 
@@ -173,6 +167,18 @@ Q3  █████████████████████████�
 Q4  █████████████████████████████████████████████████████████████████
 ```
 
+**With values:**
+```bash
+termcharts bar 120 98 145 --labels "North,South,East" --show-values
+```
+
+Output:
+```
+North  ████████████████████████████████████████████████████████ 120.0
+South  ██████████████████████████████████████████████ 98.0
+East   ███████████████████████████████████████████████████████████████████ 145.0
+```
+
 **Vertical bars:**
 ```bash
 termcharts bar 10 25 15 30 --vertical --labels "Q1,Q2,Q3,Q4"
@@ -193,34 +199,7 @@ Output:
 Q1  Q2  Q3  Q4
 ```
 
-**With values:**
-```bash
-termcharts bar 120 98 145 --labels "North,South,East" --show-values
-```
-
-Output:
-```
-North  ████████████████████████████████████████████████████████ 120.0
-South  ██████████████████████████████████████████████ 98.0
-East   ███████████████████████████████████████████████████████████████████ 145.0
-```
-
 **Grouped bar charts (multiple series side-by-side):**
-```go
-// Library - Grouped bar chart
-series := []termcharts.Series{
-    {Label: "2023", Data: []float64{10, 20, 30}},
-    {Label: "2024", Data: []float64{15, 25, 35}},
-}
-chart := termcharts.NewBarChart(
-    termcharts.WithSeries(series),
-    termcharts.WithLabels([]string{"Q1", "Q2", "Q3"}),
-    termcharts.WithBarMode(termcharts.BarModeGrouped),
-    termcharts.WithShowLegend(true),
-)
-fmt.Println(chart.Render())
-```
-
 ```bash
 # CLI - Grouped bar chart
 termcharts bar --series '[{"label":"2023","data":[10,20,30]},{"label":"2024","data":[15,25,35]}]' --grouped --labels "Q1,Q2,Q3" --legend --color
@@ -235,31 +214,6 @@ termcharts bar --series '[{"label":"2023","data":[10,20,30]},{"label":"2024","da
 ### Pie Charts ✓
 
 Pie charts display proportional data with color-coded segments and percentages.
-
-```go
-// Library
-pie := termcharts.NewPieChart(
-    termcharts.WithData([]float64{50, 30, 20}),
-    termcharts.WithLabels([]string{"Desktop", "Mobile", "Tablet"}),
-    termcharts.WithColor(true),
-)
-fmt.Println(pie.Render())
-```
-
-Output (without color):
-```
-        ◆◆◆◆●●●●●
-     ◆◆◆◆◆◆◆●●●●●●●●
-   ◆◆◆◆◆◆◆◆◆●●●●●●●●●●
-  ◆◆◆◆◆◆◆◆◆◆●●●●●●●●●●●
-  ○○○○◆◆◆◆◆◆●●●●●●●●●●●     ● Desktop   50.0%
- ○○○○○○○○○○○●●●●●●●●●●●●    ○ Mobile    30.0%
-  ○○○○○○○○○○○●●●●●●●●●●     ◆ Tablet    20.0%
-  ○○○○○○○○○○○●●●●●●●●●●
-   ○○○○○○○○○○●●●●●●●●●
-     ○○○○○○○○●●●●●●●
-        ○○○○○●●●●
-```
 
 ```bash
 # CLI
@@ -333,6 +287,31 @@ Sales Trend
 - **[Project Status](docs/status.md)** - Current development status and roadmap
 - **[GoDoc](https://pkg.go.dev/github.com/neilpeterson/termcharts)** - Generated API documentation (coming soon)
 
+## Development
+
+```bash
+# Run tests
+make test
+
+# Run tests with coverage
+make cover
+
+# Run linter
+make lint
+
+# Build binary
+make build
+
+# Install to $GOPATH/bin
+make install
+
+# Cross-compile for all platforms
+make release
+
+# Clean build artifacts
+make clean
+```
+
 ## Design Principles
 
 - **Sensible defaults**: Charts look good with zero configuration
@@ -345,6 +324,25 @@ Sales Trend
 
 - Go 1.21 or higher
 - Terminal with Unicode support (recommended, ASCII fallback available)
+
+## Testing
+
+termcharts has comprehensive test coverage (95%+):
+
+```bash
+# Run all tests
+go test ./...
+
+# Run with coverage
+go test -cover ./...
+
+# Run with race detector
+go test -race ./...
+```
+
+The project uses GitHub Actions for CI/CD with automated testing across:
+- Multiple platforms: Linux, macOS, Windows
+- Multiple Go versions: 1.21, 1.22, 1.23
 
 ## License
 
