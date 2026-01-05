@@ -285,32 +285,8 @@ Sales Trend
 - **[Pie Chart Guide](docs/pie-chart.md)** - Complete pie chart documentation with examples, API reference, and CLI usage
 - **[Line Chart Guide](docs/line-chart.md)** - Complete line chart documentation with ASCII, Unicode, and Braille modes
 - **[Project Status](docs/status.md)** - Current development status and roadmap
+- **[Contributing Guide](docs/CONTRIBUTING.md)** - Guidelines for contributors
 - **[GoDoc](https://pkg.go.dev/github.com/neilpeterson/termcharts)** - Generated API documentation (coming soon)
-
-## Development
-
-```bash
-# Run tests
-make test
-
-# Run tests with coverage
-make cover
-
-# Run linter
-make lint
-
-# Build binary
-make build
-
-# Install to $GOPATH/bin
-make install
-
-# Cross-compile for all platforms
-make release
-
-# Clean build artifacts
-make clean
-```
 
 ## Design Principles
 
@@ -325,32 +301,13 @@ make clean
 - Go 1.21 or higher
 - Terminal with Unicode support (recommended, ASCII fallback available)
 
-## Testing
-
-termcharts has comprehensive test coverage (95%+):
-
-```bash
-# Run all tests
-go test ./...
-
-# Run with coverage
-go test -cover ./...
-
-# Run with race detector
-go test -race ./...
-```
-
-The project uses GitHub Actions for CI/CD with automated testing across:
-- Multiple platforms: Linux, macOS, Windows
-- Multiple Go versions: 1.21, 1.22, 1.23
-
 ## License
 
 MIT License - See LICENSE file for details
 
 ## Contributing
 
-Contributions welcome! Please see CONTRIBUTING.md for guidelines.
+Contributions welcome! Please see [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
 
 ## Inspiration
 
