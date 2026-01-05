@@ -207,8 +207,6 @@ termcharts bar --series '[{"label":"2023","data":[10,20,30]},{"label":"2024","da
 
 ![Grouped Bar Chart Example](docs/images/bar-chart-grouped.png)
 
-*Screenshot shows grouped bars with different colors for each series.*
-
 **[→ Full Bar Chart Documentation](docs/bar-chart.md)**
 
 ### Pie Charts ✓
@@ -221,8 +219,6 @@ termcharts pie 50 30 20 --labels "Desktop,Mobile,Tablet" --color --theme dark
 ```
 
 ![Pie Chart Example](docs/images/pie-chart-color.png)
-
-*Screenshot used to display colors, which cannot be shown in markdown.*
 
 **[→ Full Pie Chart Documentation](docs/pie-chart.md)**
 
