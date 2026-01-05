@@ -131,20 +131,28 @@ Compact, inline charts that visualize data trends in a single line. Perfect for 
 ```go
 // Library
 fmt.Println(termcharts.Spark([]float64{1, 5, 2, 8, 3, 7, 4, 6}))
-// Output: ▁▅▂█▃▇▄▆
+```
+
+Output:
+```
+▁▅▂█▃▇▄▆
 ```
 
 ```bash
 # CLI
-termcharts spark 10 20 30 25 15 --color --width 50
-echo "1 5 2 8" | termcharts spark
+termcharts spark 1 5 2 8 3 7 4 6
+```
+
+Output:
+```
+▁▅▂█▃▇▄▆
 ```
 
 **[→ Full Sparkline Documentation](docs/sparkline.md)**
 
 ### Bar Charts ✓
 
-Horizontal and vertical bar charts for comparing values. Supports labels, titles, and value display.
+Horizontal and vertical bar charts for comparing values. Supports labels, titles, value display, and multi-series grouped/stacked charts.
 
 ```go
 // Library
@@ -184,6 +192,31 @@ Output:
 ███ ███ ███ ███
 Q1  Q2  Q3  Q4
 ```
+
+**Grouped bar charts (multiple series side-by-side):**
+```go
+// Library - Grouped bar chart
+series := []termcharts.Series{
+    {Label: "2023", Data: []float64{10, 20, 30}},
+    {Label: "2024", Data: []float64{15, 25, 35}},
+}
+chart := termcharts.NewBarChart(
+    termcharts.WithSeries(series),
+    termcharts.WithLabels([]string{"Q1", "Q2", "Q3"}),
+    termcharts.WithBarMode(termcharts.BarModeGrouped),
+    termcharts.WithShowLegend(true),
+)
+fmt.Println(chart.Render())
+```
+
+```bash
+# CLI - Grouped bar chart
+termcharts bar --series '[{"label":"2023","data":[10,20,30]},{"label":"2024","data":[15,25,35]}]' --grouped --labels "Q1,Q2,Q3" --legend --color
+```
+
+![Grouped Bar Chart Example](docs/images/bar-chart-grouped.png)
+
+*Screenshot shows grouped bars with different colors for each series.*
 
 **With values:**
 ```bash
@@ -267,13 +300,19 @@ Sales Trend
 
 ```bash
 # CLI - Standard ASCII/Unicode mode
-termcharts line 1 5 2 8 3 7 --color --title "Sales Trend"
+termcharts line 1 5 2 8 3 7 --title "Sales Trend"
+```
 
-# High-resolution Braille mode
-termcharts line 1 5 2 8 3 7 --braille --color
-
-# With labels
-termcharts line 150 230 180 290 --labels "Q1,Q2,Q3,Q4" --title "Quarterly Revenue"
+Output:
+```
+Sales Trend
+   8.0 ┤     ╭╮
+   6.3 ┤    ╭╯╰╮  ╭╮
+   4.7 ┤   ╭╯  ╰──╯╰╮
+   3.0 ┤  ╭╯        ╰
+   1.3 ┤ ╭╯
+   1.0 ┼─╯
+       └──────────────
 ```
 
 **[→ Full Line Chart Documentation](docs/line-chart.md)**
@@ -303,7 +342,6 @@ termcharts line 150 230 180 290 --labels "Q1,Q2,Q3,Q4" --title "Quarterly Revenu
 - [x] Value display option
 - [x] CLI `bar` subcommand
 - [x] Comprehensive tests and documentation
-- [ ] Grouped/stacked variants (deferred to v0.5.0)
 
 ### v0.3.0 - Pie Charts ✓
 - [x] Pie chart with Unicode/ASCII modes
@@ -317,6 +355,14 @@ termcharts line 150 230 180 290 --labels "Q1,Q2,Q3,Q4" --title "Quarterly Revenu
 - [x] Braille high-resolution charts
 - [x] Multi-series support with legend
 - [x] CLI `line` subcommand
+- [x] Comprehensive tests and documentation
+
+### v0.5.0 - Grouped & Stacked Bar Charts ✓
+- [x] Grouped bar charts (multiple series side-by-side)
+- [x] Stacked bar charts (series stacked on top of each other)
+- [x] Legend support for multi-series charts
+- [x] CLI `--grouped`, `--stacked`, `--legend` flags
+- [x] CLI integration tests
 - [x] Comprehensive tests and documentation
 
 See [docs/status.md](docs/status.md) for detailed status and milestones.

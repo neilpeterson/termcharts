@@ -27,6 +27,10 @@ type Options struct {
 	ShowAxes bool
 	// Theme specifies the color theme to use.
 	Theme *Theme
+	// BarMode specifies how multiple series are displayed (grouped or stacked).
+	BarMode BarMode
+	// ShowLegend controls whether to display a legend for multi-series charts.
+	ShowLegend bool
 }
 
 // Option is a function that configures chart Options using the functional options pattern.
@@ -138,5 +142,20 @@ func WithShowAxes(show bool) Option {
 func WithTheme(theme *Theme) Option {
 	return func(o *Options) {
 		o.Theme = theme
+	}
+}
+
+// WithBarMode sets how multiple series are displayed in bar charts.
+// Use BarModeGrouped for side-by-side bars or BarModeStacked for stacked bars.
+func WithBarMode(mode BarMode) Option {
+	return func(o *Options) {
+		o.BarMode = mode
+	}
+}
+
+// WithShowLegend controls whether a legend is displayed for multi-series charts.
+func WithShowLegend(show bool) Option {
+	return func(o *Options) {
+		o.ShowLegend = show
 	}
 }
